@@ -1,0 +1,254 @@
+{{! local/academic_ticket_system/templates/add_category.mustache }}
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    /* --- 1. THEME FOUNDATIONS (Consistent with Index/View) --- */
+    body {
+        font-family: 'Cairo', sans-serif;
+        background-color: #f0f2f5;
+        overflow-x: hidden;
+    }
+
+    /* Animated Background Blobs */
+    .blob {
+        position: absolute;
+        filter: blur(80px);
+        z-index: -1;
+        opacity: 0.6;
+        animation: float 10s infinite ease-in-out;
+    }
+    .blob-1 { top: 10%; left: 10%; width: 300px; height: 300px; background: #4f46e5; animation-delay: 0s; }
+    .blob-2 { bottom: 20%; right: 10%; width: 350px; height: 350px; background: #ec4899; animation-delay: 2s; }
+    .blob-3 { top: 40%; left: 40%; width: 250px; height: 250px; background: #06b6d4; animation-delay: 4s; }
+
+    @keyframes float {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
+    }
+
+    /* Glass Panels */
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.3s ease;
+    }
+    .glass-card:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    /* --- 2. FORM ELEMENTS --- */
+
+    /* Glass Inputs */
+    .glass-input {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(4px);
+        border-radius: 1rem;
+        padding: 0.75rem 1.25rem;
+        width: 100%;
+        transition: all 0.3s ease;
+        color: #1f2937;
+    }
+    .glass-input:focus {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        outline: none;
+        border-color: #6366f1;
+    }
+
+    /* Gradient Buttons */
+    .btn-gradient {
+        border: none;
+        color: white;
+        font-weight: 700;
+        border-radius: 1rem;
+        padding: 0.75rem 1.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    .bg-grad-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+    .bg-grad-purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+
+    /* --- 3. TABLE STYLES --- */
+    .custom-table th {
+        background: rgba(243, 244, 246, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.75rem;
+        color: #4b5563;
+        padding: 1rem 1.5rem;
+    }
+    .custom-table tr {
+        transition: all 0.2s ease;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+    .custom-table tr:hover {
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+    .custom-table td {
+        vertical-align: middle;
+        padding: 1rem 1.5rem;
+    }
+</style>
+
+<div class="fixed inset-0 z-[-1] bg-gray-100 overflow-hidden">
+    <div class="blob blob-1 rounded-full"></div>
+    <div class="blob blob-2 rounded-full"></div>
+    <div class="blob blob-3 rounded-full"></div>
+    <div class="absolute inset-0 bg-white/60 backdrop-blur-[60px]"></div>
+</div>
+
+<div class="container mx-auto p-4 sm:p-6 lg:p-10 max-w-7xl relative z-10 min-h-screen flex flex-col">
+
+    <header class="glass-panel rounded-3xl p-6 mb-10 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-500 hover:shadow-2xl">
+        <div class="flex items-center gap-6 w-full md:w-auto">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg text-white">
+                <i class="fas fa-plus text-3xl"></i>
+            </div>
+            <div class="flex-1">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800 flex items-center gap-2 flex-wrap">
+                    {{#str}}add_new_department, local_academic_ticket_system{{/str}}
+                </h1>
+                <p class="text-gray-500 font-medium truncate max-w-md mt-1">Create and manage ticket categories</p>
+            </div>
+        </div>
+
+        <a href="{{index_url}}" class="glass-card px-6 py-3 rounded-2xl flex items-center gap-2 text-gray-700 font-bold hover:text-purple-600 hover:bg-white transition-all">
+            <i class="fas fa-arrow-left"></i>
+            {{#str}}return_home, local_academic_ticket_system{{/str}}
+        </a>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <div class="lg:col-span-1">
+            <div class="glass-panel rounded-3xl p-8 sticky top-10">
+                <h2 class="text-xl font-extrabold text-gray-800 mb-6 flex items-center pb-4 border-b border-gray-200/50">
+                    <i class="fas fa-pen-nib text-purple-600 mr-3 text-xl"></i> Department Details
+                </h2>
+
+                <form action="{{action_url}}" method="POST" class="space-y-6">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+
+                    <div>
+                        <label for="title" class="block text-sm font-bold text-gray-600 mb-2">Title <span class="text-red-500">*</span></label>
+                        <input type="text" id="title" name="title" class="glass-input" placeholder="e.g., IT Support" required>
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-bold text-gray-600 mb-2">Description <span class="text-gray-400 font-normal">(Optional)</span></label>
+                        <textarea id="description" name="description" rows="4" class="glass-input resize-none" placeholder="Brief description..."></textarea>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="btn-gradient bg-grad-purple w-full py-3 shadow-lg shadow-purple-500/20">
+                            <i class="fas fa-save"></i> Save Department
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="glass-panel rounded-3xl p-1 overflow-hidden">
+                <div class="bg-white/40 p-6 border-b border-white/50">
+                    <h2 class="text-xl font-extrabold text-gray-800 flex items-center gap-3">
+                        <i class="fas fa-list-ul text-blue-600"></i> Existing Departments
+                    </h2>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full custom-table text-left">
+                        <thead>
+                        <tr>
+                            <th class="rounded-tl-2xl">Name</th>
+                            <th>Description</th>
+                            <th>Created By</th>
+                            <th class="rounded-tr-2xl">Date</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200/50">
+                        {{#categories}}
+                            <tr>
+                                <td class="font-bold text-gray-800">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                                        {{title}}
+                                    </div>
+                                </td>
+                                <td class="text-sm text-gray-600">
+                                    {{#description}}
+                                        {{description}}
+                                    {{/description}}
+                                    {{^description}}
+                                        <span class="text-gray-400 italic text-xs">No description</span>
+                                    {{/description}}
+                                </td>
+                                <td class="text-sm">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-500">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        {{created_by}}
+                                    </div>
+                                </td>
+                                <td class="text-xs text-gray-500 font-mono">{{created_at}}</td>
+                            </tr>
+                        {{/categories}}
+                        {{^categories}}
+                            <tr>
+                                <td colspan="4" class="text-center py-10">
+                                    <div class="flex flex-col items-center justify-center text-gray-400">
+                                        <i class="fas fa-folder-open text-4xl mb-2 opacity-50"></i>
+                                        <p>No departments found.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/categories}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    [lang="ar"]   .container { direction: rtl; }
+    [lang="ar"]  .text-right { text-align: right; }
+    [lang="ar"] .text-left { text-align: right; } /* Override left align for table in RTL */
+    [lang="ar"] .fa-arrow-left { transform: rotate(0deg); }
+
+    /* Adjust margin/padding for RTL icons */
+    [lang="ar"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
+    [lang="ar"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+
+    /* Table headers adjustments */
+    [lang="ar"]  .rounded-tl-2xl { border-top-left-radius: 0; border-top-right-radius: 1rem; }
+    [lang="ar"]  .rounded-tr-2xl { border-top-right-radius: 0; border-top-left-radius: 1rem; }
+</style>
