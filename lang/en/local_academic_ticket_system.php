@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 // Plugin Info.
 $string['pluginname'] = 'Academic Ticket System';
 $string['ticketsystem'] = 'Ticket System';
+
 // General Actions.
 $string['actions'] = 'Actions';
 $string['add_ticket'] = 'Add New Ticket';
@@ -40,19 +41,26 @@ $string['reopen_ticket_button'] = 'Reopen Ticket';
 $string['back_to_home'] = 'Back to Home';
 $string['view'] = 'View Details';
 $string['department_created'] = 'Department Created Successfully';
+$string['creation_failed'] = 'The creation of the category failed. Please try again.';
+
 // Form Fields & UI Elements.
+$string['ticket_title'] = 'Ticket Title';
 $string['ticket_title_label'] = 'Ticket Title';
 $string['ticket_description_label'] = 'Issue Description';
+$string['description'] = 'Description';
 $string['ticket_department_label'] = 'Department';
 $string['user_name_label'] = 'Submitted By';
 $string['click_to_upload'] = 'Click here to choose files from your device';
 $string['attach_files_optional'] = 'Attachments (Optional)';
+$string['attachments'] = 'Attachments';
+$string['send_ticket'] = 'Send Ticket';
 $string['welcome_message'] = 'Welcome to Academic Support System';
 $string['form_instruction'] = 'We are happy to assist you; please fill out the form below.';
 $string['title_placeholder'] = 'e.g., I cannot access the course...';
 $string['select_department_hint'] = '-- Select Department --';
 $string['description_placeholder'] = 'Please explain the issue in detail...';
 $string['drag_drop_hint'] = 'Or drag and drop files here';
+
 // Statuses.
 $string['status_open'] = 'Open';
 $string['status_closed'] = 'Closed';
@@ -61,6 +69,7 @@ $string['status_urgent'] = 'Urgent';
 $string['status_admin_reply'] = 'Admin Replied';
 $string['status_student_reply'] = 'Student Replied';
 $string['status_assigned'] = 'Assigned to Specialist';
+
 // Admin & Assignments.
 $string['admin_only_label'] = 'Administrative Controls';
 $string['change_status_label'] = 'Update Status';
@@ -73,6 +82,7 @@ $string['unassigned'] = 'Not Assigned';
 $string['assign_user'] = 'Assign Specialist';
 $string['assigned_to_label'] = 'Assigned To';
 $string['assigned_to'] = 'Assigned Specialist';
+
 // Replies & History.
 $string['replies_heading'] = 'Discussion History';
 $string['no_replies_message'] = 'No replies found for this ticket yet.';
@@ -81,12 +91,14 @@ $string['add_reply_heading'] = 'Write Your Reply';
 $string['send_reply_button'] = 'Send Reply & Files';
 $string['start_reply'] = 'Start the conversation below!';
 $string['write_your_reply'] = 'Write your reply  ....';
+
 // Activity Logs.
 $string['ticket_log'] = 'Activity Timeline';
 $string['log_replied'] = '{$a} added a new reply.';
 $string['log_status_changed'] = '{$a->user} changed status from {$a->old} to {$a->new}.';
 $string['log_assigned'] = 'Assigned ticket to a specialist.';
 $string['log_category_changed'] = '{$a->user} moved ticket from {$a->old} to {$a->new}.';
+
 // Headings & Labels.
 $string['ticket_details_heading'] = 'Ticket Details';
 $string['attachments_heading'] = 'Original Attachments';
@@ -101,8 +113,10 @@ $string['title'] = 'Subject Title';
 $string['status'] = 'Ticket Status';
 $string['department'] = 'Department';
 $string['category_title'] = 'Department';
+$string['category'] = 'Category';
 $string['ip_address'] = 'IP Address';
 $string['created_by'] = 'Created By';
+
 // Stats & General.
 $string['all_tickets_stats'] = 'Global Tickets Overview';
 $string['my_tickets_label'] = 'My Submitted Tickets';
@@ -283,3 +297,4 @@ $string['log_assigned'] = 'Assigned the ticket to: {$a}';
 $string['log_category_changed'] = 'Changed category to: {$a}';
 $string['log_internal_note_added'] = 'Added an internal note';
 $string['log_feedback_submitted'] = 'Submitted feedback with rating: {$a} stars';
+$string['ticket_title_help'] = 'Enter a brief and descriptive title for your support request.';
