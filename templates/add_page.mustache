@@ -20,360 +20,351 @@
     @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<div class="ats-wrapper">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-<style>
-    /* --- 1. THEME FOUNDATIONS (Consistent Layout) --- */
-    body {
-        font-family: 'Cairo', sans-serif;
-        background-color: #f0f2f5;
-        overflow-x: hidden;
-    }
+    <style>
+        /* --- 1. THEME FOUNDATIONS (Scoped Layout) --- */
+        .ats-wrapper {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0f2f5;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
 
-    /* Animated Background */
-    .blob {
-        position: absolute;
-        filter: blur(80px);
-        z-index: -1;
-        opacity: 0.6;
-        animation: float 10s infinite ease-in-out;
-    }
-    .blob-1 { top: 10%; left: 10%; width: 300px; height: 300px; background: #4f46e5; animation-delay: 0s; }
-    .blob-2 { bottom: 20%; right: 10%; width: 350px; height: 350px; background: #ec4899; animation-delay: 2s; }
-    .blob-3 { top: 40%; left: 40%; width: 250px; height: 250px; background: #06b6d4; animation-delay: 4s; }
+        /* Animated Background */
+        .ats-wrapper .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.6;
+            animation: ats-float 10s infinite ease-in-out;
+        }
+        .ats-wrapper .blob-1 { top: 10%; left: 10%; width: 300px; height: 300px; background: #4f46e5; animation-delay: 0s; }
+        .ats-wrapper .blob-2 { bottom: 20%; right: 10%; width: 350px; height: 350px; background: #ec4899; animation-delay: 2s; }
+        .ats-wrapper .blob-3 { top: 40%; left: 40%; width: 250px; height: 250px; background: #06b6d4; animation-delay: 4s; }
 
-    @keyframes float {
-        0% { transform: translate(0px, 0px) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-        100% { transform: translate(0px, 0px) scale(1); }
-    }
+        @keyframes ats-float {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
 
-    /* Glass Panels */
-    .glass-panel {
-        background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-        transition: transform 0.3s ease;
-    }
+        /* Glass Panels */
+        .ats-wrapper .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            transition: transform 0.3s ease;
+        }
 
-    .glass-card {
-        background: rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        transition: all 0.3s ease;
-    }
-    .glass-card:hover {
-        background: rgba(255, 255, 255, 0.9);
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
+        .ats-wrapper .glass-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        .ats-wrapper .glass-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
 
-    /* --- 2. FORM STYLING --- */
+        /* --- 2. FORM STYLING --- */
 
-    /* Glass Inputs */
-    .glass-input {
-        background: rgba(255, 255, 255, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(4px);
-        border-radius: 1rem;
-        padding: 1rem 1.25rem;
-        width: 100%;
-        transition: all 0.3s ease;
-        color: #1f2937;
-        font-size: 1rem;
-    }
-    .glass-input:focus {
-        background: rgba(255, 255, 255, 0.95);
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-        outline: none;
-        border-color: #3b82f6;
-    }
+        /* Glass Inputs */
+        .ats-wrapper .glass-input {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 1rem;
+            padding: 1rem 1.25rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+        .ats-wrapper .glass-input:focus {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            outline: none;
+            border-color: #3b82f6;
+        }
 
-    /* Custom Select Arrow */
-    select.glass-input {
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: left 1rem center;
-        background-size: 1.2rem;
-    }
+        /* Custom Select Arrow */
+        .ats-wrapper select.glass-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 1rem center;
+            background-size: 1.2rem;
+        }
 
-    /* Upload Zone */
-    .upload-zone {
-        border: 2px dashed #cbd5e1;
-        background: rgba(248, 250, 252, 0.5);
-        border-radius: 1.5rem;
-        padding: 2.5rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    .upload-zone:hover {
-        border-color: #3b82f6;
-        background: rgba(239, 246, 255, 0.6);
-        transform: scale(1.01);
-    }
-    .upload-zone.active {
-        border-color: #10b981;
-        background: rgba(236, 253, 245, 0.6);
-    }
+        /* Upload Zone */
+        .ats-wrapper .upload-zone {
+            border: 2px dashed #cbd5e1;
+            background: rgba(248, 250, 252, 0.5);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .ats-wrapper .upload-zone:hover {
+            border-color: #3b82f6;
+            background: rgba(239, 246, 255, 0.6);
+            transform: scale(1.01);
+        }
+        .ats-wrapper .upload-zone.active {
+            border-color: #10b981;
+            background: rgba(236, 253, 245, 0.6);
+        }
 
-    /* Gradient Buttons */
-    .btn-gradient {
-        border: none;
-        color: white;
-        font-weight: 700;
-        border-radius: 1rem;
-        padding: 1rem 2rem;
-        transition: transform 0.2s, box-shadow 0.2s;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        font-size: 1.1rem;
-    }
-    .btn-gradient:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
-    }
-    .bg-grad-primary { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); }
+        /* Gradient Buttons */
+        .ats-wrapper .btn-gradient {
+            border: none;
+            color: white;
+            font-weight: 700;
+            border-radius: 1rem;
+            padding: 1rem 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .ats-wrapper .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        .ats-wrapper .bg-grad-primary { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); }
 
-    .form-label {
-        display: block;
-        font-weight: 700;
-        color: #4b5563;
-        margin-bottom: 0.5rem;
-        font-size: 0.95rem;
-    }
-</style>
+        .ats-wrapper .form-label {
+            display: block;
+            font-weight: 700;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
 
-{{! local/academic_ticket_system/templates/add_page.mustache }}
+        /* RTL Adjustments scoped to ats-wrapper */
+        .ats-wrapper[lang="ar"] .container { direction: rtl; }
+        .ats-wrapper[lang="ar"] .fa-arrow-left { transform: rotate(0deg); }
+        .ats-wrapper[lang="ar"] select.glass-input { background-position: left 1rem center; }
+        .ats-wrapper[lang="ar"] .ml-2 { margin-left: 0.5rem; margin-right: 0; }
+        .ats-wrapper[lang="ar"] .mr-2 { margin-right: 0.5rem; margin-left: 0; }
+    </style>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <div class="fixed inset-0 z-0 bg-gray-100 overflow-hidden" aria-hidden="true">
+        <div class="blob blob-1 rounded-full"></div>
+        <div class="blob blob-2 rounded-full"></div>
+        <div class="blob blob-3 rounded-full"></div>
+        <div class="absolute inset-0 bg-white/60 backdrop-blur-[60px]"></div>
+    </div>
 
-<div class="fixed inset-0 z-[-1] bg-gray-100 overflow-hidden" aria-hidden="true">
-    <div class="blob blob-1 rounded-full"></div>
-    <div class="blob blob-2 rounded-full"></div>
-    <div class="blob blob-3 rounded-full"></div>
-    <div class="absolute inset-0 bg-white/60 backdrop-blur-[60px]"></div>
-</div>
+    <main class="container mx-auto p-4 sm:p-6 lg:p-10 max-w-5xl relative z-10 flex flex-col" role="main">
 
-<main class="container mx-auto p-4 sm:p-6 lg:p-10 max-w-5xl relative z-10 min-h-screen flex flex-col" role="main">
-
-    <header class="glass-panel rounded-3xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-2xl">
-        <div class="flex items-center gap-5 w-full md:w-auto">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg text-white transform rotate-3" aria-hidden="true">
-                <i class="fas fa-edit text-3xl"></i>
-            </div>
-            <div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800">
-                    {{title}}
-                </h1>
-                <p class="text-gray-500 font-medium mt-1">{{#str}} form_instruction , local_academic_ticket_system {{/str}}</p>
-            </div>
-        </div>
-
-        <a href="{{return_url}}" class="glass-card px-6 py-3 rounded-2xl flex items-center gap-2 text-gray-700 font-bold hover:text-blue-600 hover:bg-white transition-all" aria-label="{{#str}} return_home , local_academic_ticket_system {{/str}}">
-            <i class="fas fa-arrow-left" aria-hidden="true"></i>
-            <span>{{#str}} return_home , local_academic_ticket_system {{/str}}</span>
-        </a>
-    </header>
-
-    <div class="glass-panel rounded-3xl p-8 sm:p-10 relative overflow-hidden">
-        <form action="{{action_url}}" method="post" enctype="multipart/form-data" class="custom-ticket-form space-y-8">
-            <input type="hidden" name="sesskey" value="{{sesskey}}">
-
-            <div>
-                <label for="ticket_title" class="form-label">
-                    <i class="fas fa-heading text-blue-500 ms-2" aria-hidden="true"></i> {{#str}} ticket_title_label , local_academic_ticket_system {{/str}}
-                </label>
-                <input type="text" id="ticket_title" name="title" class="glass-input"
-                       placeholder="{{#str}} title_placeholder , local_academic_ticket_system {{/str}}"
-                       required aria-required="true">
+        <header class="glass-panel rounded-3xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-2xl">
+            <div class="flex items-center gap-5 w-full md:w-auto">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg text-white transform rotate-3" aria-hidden="true">
+                    <i class="fas fa-edit text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800">
+                        {{title}}
+                    </h1>
+                    <p class="text-gray-500 font-medium mt-1">{{#str}}form_instruction, local_academic_ticket_system{{/str}}</p>
+                </div>
             </div>
 
-            <div>
-                <label for="ticket_category" class="form-label">
-                    <i class="fas fa-layer-group text-purple-500 ms-2" aria-hidden="true"></i> {{#str}} ticket_department_label , local_academic_ticket_system {{/str}}
-                </label>
-                <select id="ticket_category" name="category_id" class="glass-input" required aria-required="true">
-                    <option value="" disabled selected>{{#str}} select_department_hint , local_academic_ticket_system {{/str}}</option>
-                    {{#categories}}
-                        <option value="{{id}}">{{title}}</option>
-                    {{/categories}}
-                </select>
-            </div>
+            <a href="{{return_url}}" class="glass-card px-6 py-3 rounded-2xl flex items-center gap-2 text-gray-700 font-bold hover:text-blue-600 hover:bg-white transition-all" aria-label="{{#str}}return_home, local_academic_ticket_system{{/str}}">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                <span>{{#str}}return_home, local_academic_ticket_system{{/str}}</span>
+            </a>
+        </header>
 
-            <div>
-                <label for="ticket_priority" class="form-label">
-                    <i class="fas fa-flag text-red-500 ms-2" aria-hidden="true"></i> {{#str}} ticket_priority_label , local_academic_ticket_system {{/str}}
-                </label>
-                <select id="ticket_priority" name="priority" class="glass-input" required aria-required="true">
-                    <option value="" disabled selected>{{#str}} select_priority_hint , local_academic_ticket_system {{/str}}</option>
-                    <option value="low">{{#str}} priority_low , local_academic_ticket_system {{/str}}</option>
-                    <option value="medium">{{#str}} priority_medium , local_academic_ticket_system {{/str}}</option>
-                    <option value="high">{{#str}} priority_high , local_academic_ticket_system {{/str}}</option>
-                    <option value="urgent">{{#str}} priority_urgent , local_academic_ticket_system {{/str}}</option>
-                </select>
-            </div>
+        <div class="glass-panel rounded-3xl p-8 sm:p-10 relative overflow-hidden">
+            <form action="{{action_url}}" method="post" enctype="multipart/form-data" class="custom-ticket-form space-y-8">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
 
-            <div>
-                <label for="ticket_description" class="form-label">
-                    <i class="fas fa-align-right text-green-500 ms-2" aria-hidden="true"></i> {{#str}} ticket_description_label , local_academic_ticket_system {{/str}}
-                </label>
-                <textarea id="ticket_description" name="description" rows="6" class="glass-input resize-none leading-relaxed"
-                          placeholder="{{#str}} description_placeholder , local_academic_ticket_system {{/str}}"
-                          required aria-required="true"></textarea>
-            </div>
+                <div>
+                    <label for="ticket_title" class="form-label">
+                        <i class="fas fa-heading text-blue-500 ms-2" aria-hidden="true"></i> {{#str}}ticket_title_label, local_academic_ticket_system{{/str}}
+                    </label>
+                    <input type="text" id="ticket_title" name="title" class="glass-input"
+                           placeholder="{{#str}}title_placeholder, local_academic_ticket_system{{/str}}"
+                           required aria-required="true">
+                </div>
 
-            <section class="space-y-3" aria-labelledby="voice_note_label">
-                <label id="voice_note_label" class="flex items-center font-bold text-gray-700">
-                    <i class="fas fa-microphone me-2 text-orange-500" aria-hidden="true"></i> {{#str}} record_voice_note , local_academic_ticket_system {{/str}}
-                </label>
+                <div>
+                    <label for="ticket_category" class="form-label">
+                        <i class="fas fa-layer-group text-purple-500 ms-2" aria-hidden="true"></i> {{#str}}ticket_department_label, local_academic_ticket_system{{/str}}
+                    </label>
+                    <select id="ticket_category" name="category_id" class="glass-input" required aria-required="true">
+                        <option value="" disabled selected>{{#str}}select_department_hint, local_academic_ticket_system{{/str}}</option>
+                        {{#categories}}
+                            <option value="{{id}}">{{title}}</option>
+                        {{/categories}}
+                    </select>
+                </div>
 
-                <div class="glass-panel rounded-2xl p-4 flex items-center justify-between gap-4 border-dashed border-2 border-orange-200">
-                    <div class="flex items-center gap-3">
-                        <button type="button" id="startRecord" class="w-12 h-12 rounded-full bg-orange-500 text-black flex items-center justify-center hover:bg-orange-600 transition-all shadow-lg"
-                                aria-label="{{#str}} start_recording , local_academic_ticket_system {{/str}}">
-                            <i class="fas fa-microphone" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" id="stopRecord" class="hidden w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center animate-pulse"
-                                aria-label="{{#str}} stop_recording , local_academic_ticket_system {{/str}}">
-                            <i class="fas fa-stop" aria-hidden="true"></i>
-                        </button>
-                        <div id="recordingStatus" class="text-sm font-bold text-gray-500" aria-live="polite">
-                            {{#str}} click_to_record , local_academic_ticket_system {{/str}}
+                <div>
+                    <label for="ticket_priority" class="form-label">
+                        <i class="fas fa-flag text-red-500 ms-2" aria-hidden="true"></i> {{#str}}ticket_priority_label, local_academic_ticket_system{{/str}}
+                    </label>
+                    <select id="ticket_priority" name="priority" class="glass-input" required aria-required="true">
+                        <option value="" disabled selected>{{#str}}select_priority_hint, local_academic_ticket_system{{/str}}</option>
+                        <option value="low">{{#str}}priority_low, local_academic_ticket_system{{/str}}</option>
+                        <option value="medium">{{#str}}priority_medium, local_academic_ticket_system{{/str}}</option>
+                        <option value="high">{{#str}}priority_high, local_academic_ticket_system{{/str}}</option>
+                        <option value="urgent">{{#str}}priority_urgent, local_academic_ticket_system{{/str}}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="ticket_description" class="form-label">
+                        <i class="fas fa-align-right text-green-500 ms-2" aria-hidden="true"></i> {{#str}}ticket_description_label, local_academic_ticket_system{{/str}}
+                    </label>
+                    <textarea id="ticket_description" name="description" rows="6" class="glass-input resize-none leading-relaxed"
+                              placeholder="{{#str}}description_placeholder, local_academic_ticket_system{{/str}}"
+                              required aria-required="true"></textarea>
+                </div>
+
+                <section class="space-y-3" aria-labelledby="voice_note_label">
+                    <label id="voice_note_label" class="flex items-center font-bold text-gray-700">
+                        <i class="fas fa-microphone me-2 text-orange-500" aria-hidden="true"></i> {{#str}}record_voice_note, local_academic_ticket_system{{/str}}
+                    </label>
+
+                    <div class="glass-panel rounded-2xl p-4 flex items-center justify-between gap-4 border-dashed border-2 border-orange-200">
+                        <div class="flex items-center gap-3">
+                            <button type="button" id="startRecord" class="w-12 h-12 rounded-full bg-orange-500 text-black flex items-center justify-center hover:bg-orange-600 transition-all shadow-lg"
+                                    aria-label="{{#str}}start_recording, local_academic_ticket_system{{/str}}">
+                                <i class="fas fa-microphone" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" id="stopRecord" class="hidden w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center animate-pulse"
+                                    aria-label="{{#str}}stop_recording, local_academic_ticket_system{{/str}}">
+                                <i class="fas fa-stop" aria-hidden="true"></i>
+                            </button>
+                            <div id="recordingStatus" class="text-sm font-bold text-gray-500" aria-live="polite">
+                                {{#str}}click_to_record, local_academic_ticket_system{{/str}}
+                            </div>
+                        </div>
+
+                        <div id="audioPreviewContainer" class="hidden flex-1">
+                            <audio id="audioPlayback" controls class="w-full h-8" aria-label="Audio preview"></audio>
                         </div>
                     </div>
+                    <input type="file" id="voice_note_input" name="voice_note" class="hidden" accept="audio/*">
+                </section>
 
-                    <div id="audioPreviewContainer" class="hidden flex-1">
-                        <audio id="audioPlayback" controls class="w-full h-8" aria-label="Audio preview"></audio>
+                <section class="space-y-3" aria-labelledby="upload_label">
+                    <label id="upload_label" class="form-label mb-3">
+                        <i class="fas fa-paperclip text-pink-500 ms-2" aria-hidden="true"></i> {{#str}}attach_files_optional, local_academic_ticket_system{{/str}}
+                    </label>
+                    <div class="upload-zone group relative" id="drop-zone">
+                        <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform text-blue-500" aria-hidden="true">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl"></i>
+                        </div>
+                        <h6 class="font-bold text-gray-700 text-lg mb-1">{{#str}}click_to_upload, local_academic_ticket_system{{/str}}</h6>
+                        <p class="text-sm text-gray-400" id="file-name-display" aria-live="polite">
+                            {{#str}}drag_drop_hint, local_academic_ticket_system{{/str}}
+                        </p>
+
+                        <input type="file" id="file_attachments" name="attachments[]" multiple
+                               class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                               onchange="updateFileName(this)"
+                               aria-label="{{#str}}click_to_upload, local_academic_ticket_system{{/str}}">
                     </div>
+                </section>
+
+                <div class="pt-6 flex flex-col sm:flex-row items-center justify-end gap-4 border-t border-gray-200/50">
+                    <a href="{{return_url}}" class="text-gray-500 font-bold hover:text-gray-700 px-4 py-2 transition-colors">
+                        {{#str}}cancel, local_academic_ticket_system{{/str}}
+                    </a>
+                    <button type="submit" class="btn-gradient bg-grad-primary w-full sm:w-auto shadow-lg shadow-blue-500/30">
+                        <span>{{#str}}submit, local_academic_ticket_system{{/str}}</span>
+                        <i class="fa-solid fa-paper-plane ms-2" aria-hidden="true"></i>
+                    </button>
                 </div>
-                <input type="file" id="voice_note_input" name="voice_note" class="hidden" accept="audio/*">
-            </section>
+            </form>
+        </div>
+    </main>
+</div>
 
-            <section class="space-y-3" aria-labelledby="upload_label">
-                <label id="upload_label" class="form-label mb-3">
-                    <i class="fas fa-paperclip text-pink-500 ms-2" aria-hidden="true"></i> {{#str}} attach_files_optional , local_academic_ticket_system {{/str}}
-                </label>
-                <div class="upload-zone group relative" id="drop-zone">
-                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform text-blue-500" aria-hidden="true">
-                        <i class="fa-solid fa-cloud-arrow-up text-3xl"></i>
-                    </div>
-                    <h6 class="font-bold text-gray-700 text-lg mb-1">{{#str}} click_to_upload , local_academic_ticket_system {{/str}}</h6>
-                    <p class="text-sm text-gray-400" id="file-name-display" aria-live="polite">
-                        {{#str}} drag_drop_hint , local_academic_ticket_system {{/str}}
-                    </p>
-
-                    <input type="file" id="file_attachments" name="attachments[]" multiple
-                           class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                           onchange="updateFileName(this)"
-                           aria-label="{{#str}} click_to_upload , local_academic_ticket_system {{/str}}">
-                </div>
-            </section>
-
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-end gap-4 border-t border-gray-200/50">
-                <a href="{{return_url}}" class="text-gray-500 font-bold hover:text-gray-700 px-4 py-2 transition-colors">
-                    {{#str}} cancel , local_academic_ticket_system {{/str}}
-                </a>
-                <button type="submit" class="btn-gradient bg-grad-primary w-full sm:w-auto shadow-lg shadow-blue-500/30">
-                    <span>{{#str}} submit , local_academic_ticket_system {{/str}}</span>
-                    <i class="fa-solid fa-paper-plane ms-2" aria-hidden="true"></i>
-                </button>
-            </div>
-        </form>
-    </div>
-</main>
 {{#js}}
-    require(['jquery', 'core/str'], function($, str) { // ضفنا core/str هنا
-    // Animation for Submit Button
+require(['jquery', 'core/str'], function($, str) {
     $('.custom-ticket-form').on('submit', function() {
-    var btn = $(this).find('button[type="submit"]');
-    btn.css('opacity', '0.8').css('pointer-events', 'none');
-    btn.html('<i class="fa fa-circle-notch fa-spin"></i> {{#str}} sending , local_academic_ticket_system {{/str}}');
+        var btn = $(this).find('button[type="submit"]');
+        btn.css('opacity', '0.8').css('pointer-events', 'none');
+        btn.html('<i class="fa fa-circle-notch fa-spin"></i> {{#str}}sending, local_academic_ticket_system{{/str}}');
     });
 
-    // File Upload UX Interaction
     window.updateFileName = function(input) {
-    var display = $('#file-name-display');
-    var zone = $('#drop-zone');
+        var display = $('#file-name-display');
+        var zone = $('#drop-zone');
 
-    if (input.files && input.files.length > 0) {
-    var count = input.files.length;
-
-    // هنا بنستخدم مكتبة الـ strings بتاعة مودل عشان نباصي الـ count
-    str.get_string('filesselected', 'local_academic_ticket_system', count).done(function(localizedString) {
-    display.html('<span class="text-green-600 font-bold"><i class="fa fa-check-circle"></i> ' + localizedString + '</span>');
-    });
-
-    zone.addClass('active');
-    } else {
-    display.text("{{#str}} drag_drop_hint , local_academic_ticket_system {{/str}}");
-    zone.removeClass('active');
+        if (input.files && input.files.length > 0) {
+            var count = input.files.length;
+            str.get_string('filesselected', 'local_academic_ticket_system', count).done(function(localizedString) {
+                display.html('<span class="text-green-600 font-bold"><i class="fa fa-check-circle"></i> ' + localizedString + '</span>');
+            });
+            zone.addClass('active');
+        } else {
+            display.text("{{#str}}drag_drop_hint, local_academic_ticket_system{{/str}}");
+            zone.removeClass('active');
+        }
     }
-    }
-    });
-    require(['jquery'], function($) {
+
     let mediaRecorder;
     let audioChunks = [];
 
     $('#startRecord').on('click', async function() {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-    audioChunks = [];
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
 
-    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
-    mediaRecorder.onstop = () => {
-    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-    const audioUrl = URL.createObjectURL(audioBlob);
-    $('#audioPlayback').attr('src', audioUrl);
-    $('#audioPreviewContainer').removeClass('hidden');
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    $('#audioPlayback').attr('src', audioUrl);
+                    $('#audioPreviewContainer').removeClass('hidden');
 
-    // تحويل الـ Blob لملف ووضعه في الـ Hidden Input
-    let file = new File([audioBlob], "voice_note.webm", {type:"audio/webm"});
-    let container = new DataTransfer();
-    container.items.add(file);
-    document.getElementById('voice_note_input').files = container.files;
+                    let file = new File([audioBlob], "voice_note.webm", {type:"audio/webm"});
+                    let container = new DataTransfer();
+                    container.items.add(file);
+                    document.getElementById('voice_note_input').files = container.files;
 
-    $('#recordingStatus').text("{{#str}} recording_finished , local_academic_ticket_system {{/str}}").addClass('text-green-600');
-    };
+                    $('#recordingStatus').text("{{#str}}recording_finished, local_academic_ticket_system{{/str}}").addClass('text-green-600');
+                };
 
-    mediaRecorder.start();
-    $(this).addClass('hidden');
-    $('#stopRecord').removeClass('hidden');
-    $('#recordingStatus').text("{{#str}} recording_now , local_academic_ticket_system {{/str}}").addClass('text-red-500');
-    } catch (err) {
-    alert("برجاء السماح بالوصول للمايكروفون");
-    }
-    }
+                mediaRecorder.start();
+                $(this).addClass('hidden');
+                $('#stopRecord').removeClass('hidden');
+                $('#recordingStatus').text("{{#str}}recording_now, local_academic_ticket_system{{/str}}").addClass('text-red-500');
+            } catch (err) {
+                str.get_string('nopermission', 'local_academic_ticket_system').done(function(localizedString) {
+                    alert(localizedString);
+                });
+            }
+        }
     });
 
     $('#stopRecord').on('click', function() {
-    mediaRecorder.stop();
-    $(this).addClass('hidden');
-    $('#startRecord').removeClass('hidden');
+        mediaRecorder.stop();
+        $(this).addClass('hidden');
+        $('#startRecord').removeClass('hidden');
     });
-    });
+});
 {{/js}}
-
-<style>
-    [lang="ar"] .container { direction: rtl; }
-    [lang="ar"]   .fa-arrow-left { transform: rotate(0deg); }
-    /* Fix Select Arrow Position for RTL */
-    [lang="ar"] select.glass-input { background-position: left 1rem center; }
-
-    /* Icon Margins */
-    [lang="ar"] .ml-2 { margin-left: 0.5rem; margin-right: 0; }
-    [lang="ar"] .mr-2 { margin-right: 0.5rem; margin-left: 0; }
-</style>
