@@ -53,17 +53,24 @@ class add_ticket_form extends \moodleform {
             'placeholder' => get_string('title_placeholder', 'local_academic_ticket_system'),
         ]);
         $mform->setType('title', PARAM_TEXT);
-        $mform->addRule('title', null, 'required', null, 'client');
 
-        // Add help button.
-        $mform->addHelpButton('title', 'title_help', 'local_academic_ticket_system');
+        // Fix: Use get_string for the required rule message.
+        $mform->addRule('title', get_string('required'), 'required', null, 'client');
+
+        // Help button (Make sure strings exist in lang file).
+        $mform->addHelpButton('title', 'ticket_title', 'local_academic_ticket_system');
 
         // Category field (Dropdown).
         $categories = $this->_customdata['categories'];
-        $options = array_map(fn($c) => $c->name, $categories);
+        $options = [0 => get_string('select_department_hint', 'local_academic_ticket_system')];
+        foreach ($categories as $category) {
+            $options[$category->id] = $category->name;
+        }
+
         $mform->addElement('select', 'category_id', get_string('category', 'local_academic_ticket_system'), $options, [
             'class' => 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none',
         ]);
+        $mform->addRule('category_id', get_string('required'), 'required', null, 'client');
 
         // Description field (Editor).
         $mform->addElement('editor', 'description', get_string('description', 'local_academic_ticket_system'), [
@@ -71,6 +78,7 @@ class add_ticket_form extends \moodleform {
             'class' => 'rounded-xl',
         ]);
         $mform->setType('description', PARAM_RAW);
+        $mform->addRule('description', get_string('required'), 'required', null, 'client');
 
         // Attachments area (Filemanager).
         $mform->addElement('filemanager', 'attachments', get_string('attachments', 'local_academic_ticket_system'), null, [
@@ -93,6 +101,7 @@ class add_ticket_form extends \moodleform {
                 'class' => $submitclasses,
             ]);
 
+        // Use core 'cancel' string.
         $buttonarray[] = $mform->createElement('cancel', 'cancelbutton', get_string('cancel'), [
             'class' => 'bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 px-8 rounded-lg transition-all',
         ]);
