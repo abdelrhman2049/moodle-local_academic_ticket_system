@@ -1,0 +1,318 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @package    local_academic_ticket_system
+    @copyright  2026 learn-ix support@learn-ix.com
+    @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<div class="ats-container relative">
+    <div class="fixed inset-0 z-[-1] bg-gray-100 overflow-hidden">
+        <div class="blob blob-1 rounded-full"></div>
+        <div class="blob blob-2 rounded-full"></div>
+        <div class="blob blob-3 rounded-full"></div>
+        <div class="absolute inset-0 bg-white/60 backdrop-blur-[60px]"></div>
+    </div>
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-10 max-w-7xl relative z-10 min-h-screen flex flex-col">
+
+        <header class="glass-panel rounded-3xl p-8 mb-10 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-500 hover:shadow-2xl">
+            <div class="flex items-center gap-6">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition-all duration-300">
+                    <i class="fas fa-headset text-4xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-1">
+                        {{#str}}welcome_message, local_academic_ticket_system{{/str}}
+                    </h1>
+                    <p class="text-gray-500 font-medium text-lg">
+                        <span class="text-indigo-600">{{user_name}}</span>, {{#str}}header_subtitle, local_academic_ticket_system{{/str}}
+                    </p>
+                </div>
+            </div>
+
+            <div class="glass-card px-6 py-3 rounded-2xl flex items-center gap-3">
+                <div class="bg-green-100 p-2 rounded-full">
+                    <i class="fas fa-calendar-day text-green-600"></i>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-gray-500 font-bold uppercase">{{#str}}current_year_label, local_academic_ticket_system{{/str}}</p>
+                    <p class="text-lg font-bold text-gray-800">{{currentyear}}</p>
+                </div>
+            </div>
+        </header>
+
+        {{#has_manage_capability}}
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-chart-pie text-indigo-500 mr-3"></i> {{#str}}live_stats_heading, local_academic_ticket_system{{/str}}
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="glass-card rounded-3xl p-6 relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-100 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                        <div class="flex justify-between items-start relative z-10">
+                            <div>
+                                <p class="text-sm font-bold text-gray-500 uppercase tracking-wide">{{#str}}total_tickets_label, local_academic_ticket_system{{/str}}</p>
+                                <h3 class="text-4xl font-extrabold text-gray-800 mt-2">{{total_tickets}}</h3>
+                            </div>
+                            <div class="p-3 bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-200">
+                                <i class="fas fa-layer-group text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center relative z-10">
+                            <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">
+                                <i class="fas fa-check mr-1"></i> {{total_closed_tickets}} {{#str}}closed_label, local_academic_ticket_system{{/str}}
+                            </span>
+                            <span class="text-xs font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded-lg">
+                                <i class="fas fa-clock mr-1"></i> {{total_open_tickets}} {{#str}}open_label, local_academic_ticket_system{{/str}}
+                            </span>
+                        </div>
+                    </div>
+
+                    {{#categories}}
+                        <div class="glass-card rounded-3xl p-6 relative overflow-hidden group">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-indigo-500 to-purple-500"></div>
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-lg font-bold text-gray-800 truncate pr-2">{{title}}</h3>
+                                <i class="fas fa-folder-open text-indigo-300 group-hover:text-indigo-600 transition-colors text-2xl"></i>
+                            </div>
+                            <div class="flex gap-2">
+                                <div class="flex-1 bg-white/50 rounded-xl p-2 text-center border border-white/50">
+                                    <span class="block text-xl font-bold text-indigo-600">{{open_tickets}}</span>
+                                    <span class="text-[10px] text-gray-500 font-bold">{{#str}}open_label, local_academic_ticket_system{{/str}}</span>
+                                </div>
+                                <div class="flex-1 bg-white/50 rounded-xl p-2 text-center border border-white/50">
+                                    <span class="block text-xl font-bold text-gray-600">{{closed_tickets}}</span>
+                                    <span class="text-[10px] text-gray-500 font-bold">{{#str}}closed_label, local_academic_ticket_system{{/str}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {{/categories}}
+                </div>
+            </div>
+        {{/has_manage_capability}}
+
+        <div class="glass-panel rounded-3xl p-1 shadow-2xl relative overflow-hidden">
+
+            <div class="bg-white/40 p-6 sm:p-8 border-b border-white/50 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-gray-800 flex items-center gap-3">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600">
+                            <i class="fas fa-ticket-alt"></i>
+                        </span>
+                        {{#str}}my_tickets_label, local_academic_ticket_system{{/str}}
+                    </h2>
+                    <p class="text-sm text-gray-500 mt-1 mr-14">{{#str}}my_tickets_desc, local_academic_ticket_system{{/str}}</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <div class="relative w-full md:w-64 group">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500"></i>
+                        <input type="text" id="ticketSearch" onkeyup="filterTickets()"
+                               placeholder="{{#str}}search_placeholder, local_academic_ticket_system{{/str}}"
+                               class="search-input w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium text-gray-700 placeholder-gray-400">
+                    </div>
+
+                    {{#has_addtick_capability}}
+                        <a href="add.php" class="btn-action bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-blue-500/30 flex items-center gap-2 transform hover:-translate-y-1">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            <span class="hidden sm:inline">{{#str}}create_ticket, local_academic_ticket_system{{/str}}</span>
+                        </a>
+                    {{/has_addtick_capability}}
+
+                    {{#has_addCat_capability}}
+                        <a href="add_category.php" class="btn-action bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-purple-500/30 flex items-center gap-2 transform hover:-translate-y-1">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </a>
+                    {{/has_addCat_capability}}
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-6 overflow-x-auto">
+                <div class="bg-white/50 rounded-2xl border border-white/60 overflow-scroll backdrop-blur-sm">
+                    <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm bg-white">
+                        <table class="w-full text-right border-collapse" id="ticketsTable">
+                            <thead>
+                            <tr class="bg-gray-50/80 border-b border-gray-200">
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}id, local_academic_ticket_system{{/str}}</th>
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}title, local_academic_ticket_system{{/str}}</th>
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">{{#str}}status, local_academic_ticket_system{{/str}}</th>
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}category_title, local_academic_ticket_system{{/str}}</th>
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}priority, local_academic_ticket_system{{/str}}</th>
+
+                                {{#has_manage_capability}}
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}created_by, local_academic_ticket_system{{/str}}</th>
+                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}assigned_to_label, local_academic_ticket_system{{/str}}</th>
+                                {{/has_manage_capability}}
+
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">{{#str}}actions, local_academic_ticket_system{{/str}}</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                            {{#tickets}}
+                                <tr class="hover:bg-indigo-50/30 transition-all duration-200 group ticket-row">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="relative inline-flex items-center">
+                                            {{#is_action_needed}}
+                                                <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+                                    </span>
+                                            {{/is_action_needed}}
+                                            <span class="font-mono text-xs font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded border border-slate-200 shadow-sm">
+                                  <a href="{{view_url}}">#{{id}}</a>
+                                </span>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <div class="max-w-xs md:max-w-sm">
+                                            <div class="font-semibold text-gray-900 group-hover:text-indigo-700 truncate transition-colors"><a href="{{view_url}}">{{title}}</a></div>
+                                            <div class="text-[11px] text-gray-400 mt-1.5 flex items-center gap-1.5">
+                                                <i class="far fa-calendar-alt"></i> {{created_at}}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-6 py-4 text-center">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide border {{status_class}}">
+                                <span class="w-1.5 h-1.5 rounded-full mr-1.5 bg-current"></span>
+                                {{status}}
+                            </span>
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm text-gray-600 bg-indigo-50 px-2 py-1 rounded text-indigo-700 font-medium">
+                                {{category_title}}
+                            </span>
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold px-2 py-1 rounded bg-gray-100 text-gray-700 uppercase priority-{{priority}}">
+                                    {{priority}}
+                                </span>
+                                        </div>
+                                    </td>
+
+                                    {{#has_manage_capability}}
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 border border-indigo-200 shadow-inner">
+                                                    <i class="fas fa-user-circle text-lg"></i>
+                                                </div>
+                                                <span class="text-sm font-semibold text-gray-700">{{created_by}}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-500 italic">
+                                            {{#assigned_to}}{{assigned_to}}{{/assigned_to}}
+                                            {{^assigned_to}}<span class="text-gray-300">غير محدد</span>{{/assigned_to}}
+                                        </td>
+                                    {{/has_manage_capability}}
+
+                                    <td class="px-6 py-4 text-center">
+                                        <a href="{{view_url}}"
+                                           class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white shadow-sm border border-indigo-100 transition-all duration-300 group/btn">
+                                            <i class="fas fa-chevron-left group-hover/btn:-translate-x-1 transition-transform"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {{/tickets}}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {{^tickets}}
+                        <div class="flex flex-col items-center justify-center py-16 px-4">
+                            <div class="relative mb-6">
+                                <div class="absolute inset-0 bg-blue-400 blur-[40px] opacity-20 rounded-full animate-pulse"></div>
+                                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" class="w-32 h-32 opacity-80 relative z-10 drop-shadow-xl" alt="No tickets">
+                            </div>
+                            <h3 class="text-2xl font-extrabold text-gray-800 mb-2">{{#str}}no_tickets_title, local_academic_ticket_system{{/str}}</h3>
+                            <p class="text-gray-500 max-w-md text-center mb-8">{{#str}}no_tickets_message, local_academic_ticket_system{{/str}}</p>
+                            <a href="add.php" class="btn-action bg-gray-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 shadow-lg">
+                                {{#str}}start_new_ticket_btn, local_academic_ticket_system{{/str}}
+                            </a>
+                        </div>
+                    {{/tickets}}
+
+                </div>
+                {{#has_pagination}}
+                    <div class="mt-10 flex flex-col md:flex-row items-center justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm gap-4">
+
+                        <div class="text-sm font-medium text-slate-500 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                            {{#str}} showing, local_academic_ticket_system {{/str}}
+                            <b class="text-slate-900">{{showing_from}}</b>
+                            {{#str}} to, local_academic_ticket_system {{/str}}
+                            <b class="text-slate-900">{{showing_to}}</b>
+                            {{#str}} of, local_academic_ticket_system {{/str}}
+                            <b class="text-slate-900">{{total_records}}</b>
+                            {{#str}} tickets_count, local_academic_ticket_system {{/str}}
+                        </div>
+
+                        <nav class="flex items-center gap-2" aria-label="Pagination">
+                            {{#prev_url}}
+                                <a href="{{prev_url}}"
+                                   class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-200 shadow-sm flex-shrink-0"
+                                   title="{{#str}} previous {{/str}}">
+                                    <i class="fas fa-chevron-left text-xs"></i>
+                                </a>
+                            {{/prev_url}}
+
+                            <div class="flex items-center gap-2">
+                                {{#pagination}}
+                                    <a href="{{pagurl}}"
+                                       class="flex items-center justify-center w-10 h-10 rounded-xl text-sm font-bold transition-all duration-200 flex-shrink-0
+                               {{#active}} bg-indigo-600 text-white shadow-md shadow-indigo-100 {{/active}}
+                                       {{^active}} bg-white border border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 {{/active}}">
+                                        {{pagnumber}}
+                                    </a>
+                                {{/pagination}}
+                            </div>
+
+                            {{#next_url}}
+                                <a href="{{next_url}}"
+                                   class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-600 hover:text-black hover:border-indigo-600 transition-all duration-200 shadow-sm flex-shrink-0"
+                                   title="{{#str}} next {{/str}}">
+                                    <i class="fas fa-chevron-right text-xs"></i>
+                                </a>
+                            {{/next_url}}
+                        </nav>
+                    </div>
+                {{/has_pagination}}
+            </div>
+        </div>
+
+        <footer class="mt-auto py-8 text-center border-t border-gray-200/50 mt-12">
+            <p class="text-sm text-gray-500 font-medium">
+                {{#str}}copyright_label, local_academic_ticket_system{{/str}} © {{currentyear}} <span class="text-indigo-600 font-bold">Boghdady</span>
+            </p>
+        </footer>
+
+    </div>
+</div>
+
+{{#js}}
+require(['local_academic_ticket_system/ticket_filter'], function(ticketFilter) {
+    ticketFilter.init();
+});
+{{/js}}
