@@ -1,0 +1,541 @@
+/*
+ * This file is part of Moodle - https://moodle.org/
+ *
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * @package    local_academic_ticket_system
+ * @copyright  2026 learn-ix support@learn-ix.com
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+.ats-container *, .ats-container ::before, .ats-container ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}
+
+.ats-container ::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+  --tw-contain-size:  ;
+  --tw-contain-layout:  ;
+  --tw-contain-paint:  ;
+  --tw-contain-style:  ;
+}
+
+.ats-container *,
+.ats-container ::before,
+.ats-container ::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+
+.ats-container ::before,
+.ats-container ::after {
+  --tw-content: '';
+}
+
+.ats-container {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  -webkit-tap-highlight-color: transparent;
+  margin: 0;
+}
+
+.ats-container hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+
+.ats-container abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+.ats-container h1,
+.ats-container h2,
+.ats-container h3,
+.ats-container h4,
+.ats-container h5,
+.ats-container h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 0;
+}
+
+.ats-container a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.ats-container b,
+.ats-container strong {
+  font-weight: bolder;
+}
+
+.ats-container code,
+.ats-container kbd,
+.ats-container samp,
+.ats-container pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  font-size: 1em;
+}
+
+.ats-container small {
+  font-size: 80%;
+}
+
+.ats-container sub,
+.ats-container sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.ats-container sub {
+  bottom: -0.25em;
+}
+
+.ats-container sup {
+  top: -0.5em;
+}
+
+.ats-container table {
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+
+.ats-container button,
+.ats-container input,
+.ats-container optgroup,
+.ats-container select,
+.ats-container textarea {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.ats-container button,
+.ats-container select {
+  text-transform: none;
+}
+
+.ats-container button,
+.ats-container input:where([type='button']),
+.ats-container input:where([type='reset']),
+.ats-container input:where([type='submit']) {
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
+
+.ats-container :-moz-focusring {
+  outline: auto;
+}
+
+.ats-container :-moz-ui-invalid {
+  box-shadow: none;
+}
+
+.ats-container progress {
+  vertical-align: baseline;
+}
+
+.ats-container ::-webkit-inner-spin-button,
+.ats-container ::-webkit-outer-spin-button {
+  height: auto;
+}
+
+.ats-container [type='search'] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+
+.ats-container ::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.ats-container ::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+.ats-container summary {
+  display: list-item;
+}
+
+.ats-container blockquote,
+.ats-container dl,
+.ats-container dd,
+.ats-container hr,
+.ats-container figure,
+.ats-container p,
+.ats-container pre {
+  margin: 0;
+}
+
+.ats-container fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+.ats-container legend {
+  padding: 0;
+}
+
+.ats-container ol,
+.ats-container ul,
+.ats-container menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ats-container dialog {
+  padding: 0;
+}
+
+.ats-container textarea {
+  resize: vertical;
+}
+
+.ats-container input::-moz-placeholder, .ats-container textarea::-moz-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+.ats-container input::placeholder,
+.ats-container textarea::placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+.ats-container button,
+.ats-container [role="button"] {
+  cursor: pointer;
+}
+
+.ats-container :disabled {
+  cursor: default;
+}
+
+.ats-container img,
+.ats-container svg,
+.ats-container video,
+.ats-container canvas,
+.ats-container audio,
+.ats-container iframe,
+.ats-container embed,
+.ats-container object {
+  display: block;
+  vertical-align: middle;
+}
+
+.ats-container img,
+.ats-container video {
+  max-width: 100%;
+  height: auto;
+}
+
+.ats-container [hidden]:where(:not([hidden="until-found"])) {
+  display: none;
+}
+
+.ats-container .custom-alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-left: 5px solid #017BFE;
+  background-color: #E8F4FD;
+  color: #004085;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ats-container .custom-alert.alert-info {
+  border-color: #007BFF;
+  background-color: #E9F7FF;
+  color: #004085;
+}
+
+.ats-container .custom-alert.alert-success {
+  border-color: #28A745;
+  background-color: #E9F9ED;
+  color: #155724;
+}
+
+.ats-container .custom-alert.alert-warning {
+  border-color: #FFC107;
+  background-color: #FFFAEB;
+  color: #856404;
+}
+
+.ats-container .custom-alert.alert-error {
+  border-color: #DC3545;
+  background-color: #FDEDEC;
+  color: #721C24;
+}
+
+.ats-container .alert-title {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.ats-container .alert-message {
+  display: inline-block;
+}
+
+.ats-container button {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.ats-container button.learn-more {
+  width: 15rem;
+  height: auto;
+}
+
+.ats-container button.learn-more .circle {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  background: #5059e4;
+  border-radius: 1.625rem;
+}
+
+.ats-container button.learn-more .circle .icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+}
+
+.ats-container button.learn-more .circle .icon.arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.625rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+}
+
+.ats-container button.learn-more .circle .icon.arrow::before {
+  position: absolute;
+  content: "";
+  top: -0.29rem;
+  right: 0.0625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-top: 0.125rem solid #fff;
+  border-right: 0.125rem solid #fff;
+  transform: rotate(45deg);
+}
+
+.ats-container button.learn-more .button-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.75rem 0;
+  margin: 0 0 0 1.85rem;
+  color: #282936;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ats-container button:hover .circle {
+  width: 100%;
+}
+
+.ats-container button:hover .circle .icon.arrow {
+  background: #fff;
+  transform: translate(1rem, 0);
+}
+
+.ats-container button:hover .button-text {
+  color: #fff;
+}
+
+.ats-container .alert {
+  position: relative;
+  padding: 10px;
+  background-color: #fef3c7;
+  color: #9c8d38;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ats-container .alert p {
+  margin: 0;
+}
+
+.ats-container .alert button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.ats-container .alert button:hover {
+  color: #d97706;
+}
+
+.ats-container .moodle-form-container .fitem {
+  @apply flex flex-col mb-4 !important;
+}
+
+.ats-container .moodle-form-container .fitem .fitemtitle {
+  @apply font-semibold text-gray-700 mb-2 w-full text-right !important;
+}
+
+.ats-container .moodle-form-container .felement {
+  @apply w-full !important;
+}
+
+.ats-container .moodle-form-container .text-danger {
+  @apply text-red-500 ml-1 !important;
+}
