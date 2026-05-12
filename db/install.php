@@ -32,8 +32,8 @@ function xmldb_local_academic_ticket_system_install() {
 
     $category = new stdClass();
     $category->title = 'Support';
-    $category->description = 'Default system category';
-    $category->created_by = 0;
+    $category->description = 'Default system Department';
+    $category->created_by = 'System';
     $category->created_at = time();
     $category->updated_at = time();
 
