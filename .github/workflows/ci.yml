@@ -1,0 +1,76 @@
+name: Moodle Plugin CI
+
+on: [push, pull_request]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, mysqli, gd, zip, intl, xml, curl, soap
+          ini-values: max_execution_time=600, memory_limit=-1, max_input_vars=5000
+
+      - name: Install moodle-plugin-ci
+        run: |
+          composer create-project moodlehq/moodle-plugin-ci ${{ github.workspace }}/../ci --no-dev
+          echo "${{ github.workspace }}/../ci/bin" >> $GITHUB_PATH
+
+      - name: Initialize Moodle
+        run: |
+          moodle-plugin-ci install \
+            --plugin . \
+            --db-type mysqli \
+            --db-host 127.0.0.1 \
+            --db-user root \
+            --db-pass root \
+            --db-name moodle \
+            --branch MOODLE_405_STABLE \
+            --no-init
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: PHP Lint
+        run: moodle-plugin-ci phplint
+
+      - name: PHP Code Style Fixer
+        run: moodle-plugin-ci phpcbf || true
+
+      - name: PHP Code Style Check
+        run: moodle-plugin-ci phpcs
+
+      - name: PHP Mess Detector
+        run: moodle-plugin-ci phpmd
+
+      - name: PHP Copy Paste Detector
+        run: moodle-plugin-ci phpcpd || true
+
+      - name: XMLDB Validation
+        run: moodle-plugin-ci xmldb
+
+      - name: CSS Lint
+        run: moodle-plugin-ci csslint
+
+      - name: JavaScript Lint
+        run: moodle-plugin-ci jshint
+
+      - name: Mustache Lint
+        run: moodle-plugin-ci mustache

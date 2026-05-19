@@ -1,0 +1,540 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @package    local_academic_ticket_system
+    @copyright  2026 learn-ix support@learn-ix.com
+    @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<div class="ats-container relative">
+
+    <!-- كلاسات مساعدة لدمج وتوزيع ألوان الهوية بشكل احترافي مع الـ Hover -->
+    <style>
+        .ats-container .bg-primary-solid { background-color: var(--ats-primary) !important; }
+        .ats-container .bg-secondary-solid { background-color: var(--ats-secondary) !important; }
+
+        .ats-container .text-primary-solid { color: var(--ats-primary) !important; }
+        .ats-container .text-secondary-solid { color: var(--ats-secondary) !important; }
+
+        .ats-container .btn-primary-solid { background-color: var(--ats-primary) !important; color: white !important; transition: all 0.3s ease; border: none; }
+        .ats-container .btn-primary-solid:hover { background-color: var(--ats-secondary) !important; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+
+        .ats-container .btn-secondary-solid { background-color: var(--ats-secondary) !important; color: white !important; transition: all 0.3s ease; border: none; }
+        .ats-container .btn-secondary-solid:hover { background-color: var(--ats-primary) !important; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+
+        .ats-container .hover-text-secondary:hover { color: var(--ats-secondary) !important; }
+        .ats-container .group:hover .group-hover-text-secondary { color: var(--ats-secondary) !important; }
+        .ats-container .hover-border-secondary:hover { border-color: var(--ats-secondary) !important; }
+    </style>
+
+    <div class="fixed inset-0 z-0 bg-gray-100 overflow-hidden">
+        <div class="blob blob-1 rounded-full"></div>
+        <div class="blob blob-2 rounded-full"></div>
+        <div class="blob blob-3 rounded-full"></div>
+        <div class="absolute inset-0 bg-white/60 backdrop-blur-[60px]"></div>
+    </div>
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-10 max-w-7xl relative z-10 min-h-screen flex flex-col">
+
+        <header class="glass-panel rounded-3xl p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-500 hover:shadow-2xl">
+            <div class="flex items-center gap-6 w-full md:w-auto">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-brand text-white bg-primary-solid">
+                    <i class="fas fa-ticket-alt text-3xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-800 flex items-center gap-2 flex-wrap">
+                        {{#str}}viewticket, local_academic_ticket_system{{/str}}
+                        <span class="text-secondary-solid bg-brand-light px-3 py-1 rounded-lg text-xl border border-brand-light">#{{ticket.id}}</span>
+                    </h1>
+                    <p class="text-gray-500 font-medium truncate max-w-md mt-1">{{ticket.title}}</p>
+                </div>
+            </div>
+
+            <a href="{{home_url}}" class="glass-card px-6 py-3 rounded-2xl flex items-center gap-2 text-gray-700 font-bold hover-text-secondary hover:bg-white transition-all text-decoration-none">
+                <i class="fas fa-arrow-left"></i>
+                {{#str}}return_home, local_academic_ticket_system{{/str}}
+            </a>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-{{#has_manage_capability}}3{{/has_manage_capability}}{{^has_manage_capability}}1{{/has_manage_capability}} gap-8">
+
+            <div class="lg:col-span-{{#has_manage_capability}}2{{/has_manage_capability}}{{^has_manage_capability}}1{{/has_manage_capability}} space-y-8">
+
+                <div class="glass-panel rounded-3xl p-8 relative overflow-hidden">
+                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-brand-light rounded-full blur-2xl pointer-events-none"></div>
+
+                    <h2 class="text-2xl font-extrabold text-gray-800 mb-6 flex items-center pb-4 border-b border-gray-200/50 relative z-10">
+                        <i class="fas fa-info-circle text-primary-solid mr-3 text-2xl"></i> {{#str}}ticket_details_heading, local_academic_ticket_system{{/str}}
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 mb-8 relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-light flex items-center justify-center text-primary-solid"><i class="fas fa-id-badge"></i></div>
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">{{#str}}ticket_id_label, local_academic_ticket_system{{/str}}</p>
+                                <p class="text-gray-800 font-bold">#{{ticket.id}}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-light flex items-center justify-center text-secondary-solid"><i class="fas fa-user-circle"></i></div>
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">{{#str}}user_name_label, local_academic_ticket_system{{/str}}</p>
+                                <p class="text-gray-800 font-bold">
+                                    <a href="{{ticket.creator_profile_url}}" class="text-gray-800 hover:underline hover-text-secondary text-decoration-none transition-colors" title="اضغط هنا لعرض بروفايل الطالب">{{ticket.created_by}}</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-light flex items-center justify-center text-primary-solid"><i class="fas fa-layer-group"></i></div>
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">{{#str}}ticket_department_label, local_academic_ticket_system{{/str}}</p>
+                                <p class="text-gray-800 font-bold">{{ticket.category}}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-light flex items-center justify-center text-secondary-solid"><i class="fas fa-calendar-alt"></i></div>
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">{{#str}}created_at, local_academic_ticket_system{{/str}}</p>
+                                <p class="text-gray-800 font-bold">{{ticket.created_at}}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all
+                                {{#ticket.priority_urgent}}bg-red-100 text-red-600 animate-pulse{{/ticket.priority_urgent}}
+                                {{#ticket.priority_high}}bg-orange-100 text-orange-600{{/ticket.priority_high}}
+                                {{#ticket.priority_medium}}bg-blue-100 text-blue-600{{/ticket.priority_medium}}
+                                {{#ticket.priority_low}}bg-gray-100 text-gray-500{{/ticket.priority_low}}">
+
+                                <i class="fas {{#ticket.priority_urgent}}fa-fire-alt{{/ticket.priority_urgent}}{{^ticket.priority_urgent}}fa-flag{{/ticket.priority_urgent}}"
+                                   aria-hidden="true"></i>
+                            </div>
+
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase leading-none mb-1">
+                                    {{#str}}priority, local_academic_ticket_system{{/str}}
+                                </p>
+                                <p class="text-sm font-extrabold leading-none
+                                    {{#ticket.priority_urgent}}text-red-700{{/ticket.priority_urgent}}
+                                    {{^ticket.priority_urgent}}text-gray-800{{/ticket.priority_urgent}}">
+                                    {{ticket.priority_label}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-2 mt-2">
+                            <p class="text-xs text-gray-400 font-bold uppercase mb-2">{{#str}}ticket_status_label, local_academic_ticket_system{{/str}}</p>
+                            <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold shadow-sm {{ticket.status_class}}">
+                                {{ticket.translated_status}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/40 rounded-2xl p-6 border border-white/50 relative z-10">
+                        <p class="text-sm font-bold text-gray-500 uppercase mb-3 flex items-center gap-2">
+                            <i class="fas fa-align-left text-secondary-solid"></i> {{#str}}ticket_description_label, local_academic_ticket_system{{/str}}
+                        </p>
+                        <div class="prose max-w-none text-gray-700 leading-relaxed">
+                            {{{ticket.description}}}
+                        </div>
+                    </div>
+
+                    {{#ticket.has_attachments}}
+                        <div class="mt-8 relative z-10">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-paperclip text-primary-solid"></i> {{#str}}attachments_heading, local_academic_ticket_system{{/str}}
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                {{#ticket.attachments}}
+                                    <a href="{{download_url}}" target="_blank" class="glass-card p-3 rounded-xl flex items-center gap-3 group text-decoration-none hover-border-secondary transition-all">
+                                        <div class="w-10 h-10 bg-brand-light rounded-lg flex items-center justify-center text-primary-solid group-hover:text-secondary-solid group-hover:scale-110 transition-transform">
+                                            {{{icon}}}
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-bold text-gray-700 truncate group-hover-text-secondary transition-colors">{{name}}</p>
+                                            <p class="text-xs text-gray-400">Click to download</p>
+                                        </div>
+                                    </a>
+                                {{/ticket.attachments}}
+                            </div>
+                        </div>
+                    {{/ticket.has_attachments}}
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8">
+                    <h2 class="text-2xl font-extrabold text-gray-800 mb-8 flex items-center">
+                        <i class="fas fa-comments text-secondary-solid mr-3 text-2xl"></i> {{#str}}replies_heading, local_academic_ticket_system{{/str}}
+                    </h2>
+
+                    {{#replies}}
+                        <div class="reply-card {{#is_manager_reply}}reply-card-admin{{/is_manager_reply}}{{^is_manager_reply}}reply-card-user{{/is_manager_reply}} hover:shadow-lg">
+                            <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-400/20">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold {{#is_manager_reply}}bg-primary-solid{{/is_manager_reply}}{{^is_manager_reply}}bg-yellow-500{{/is_manager_reply}}">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-gray-800">{{user}}</p>
+                                        <p class="text-xs text-gray-500">{{#is_manager_reply}}Support Team{{/is_manager_reply}}{{^is_manager_reply}}Student{{/is_manager_reply}}</p>
+                                    </div>
+                                </div>
+                                <div class="text-xs font-medium text-gray-500 bg-white/50 px-2 py-1 rounded-lg">
+                                    {{time}}
+                                </div>
+                            </div>
+                            <div class="text-gray-800 leading-relaxed prose prose-sm max-w-none">
+                                {{{message}}}
+                            </div>
+
+                            {{#has_reply_attachments}}
+                                <div class="mt-4 pt-3 border-t border-gray-400/20">
+                                    <p class="text-xs font-bold text-gray-500 mb-2">Attached Files:</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        {{#reply_attachments}}
+                                            <a href="{{url}}" class="inline-flex items-center gap-2 px-3 py-1 bg-white/60 rounded-lg text-xs font-bold text-primary-solid hover:bg-brand-light transition-colors text-decoration-none hover-border-secondary hover-text-secondary border border-transparent">
+                                                <i class="fas fa-file"></i> {{name}}
+                                            </a>
+                                        {{/reply_attachments}}
+                                    </div>
+                                </div>
+                            {{/has_reply_attachments}}
+                        </div>
+                    {{/replies}}
+
+                    {{^replies}}
+                        <div class="flex flex-col items-center justify-center p-12 bg-white/30 rounded-2xl border border-dashed border-brand-light text-center hover-border-secondary transition-colors">
+                            <div class="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center text-primary-solid mb-4 text-2xl">
+                                <i class="fas fa-comment-slash"></i>
+                            </div>
+                            <h2 class="text-lg font-bold text-gray-700">{{#str}}no_replies_message, local_academic_ticket_system{{/str}}</h2>
+                            <p class="text-gray-500 text-sm mt-1">{{#str}}start_reply, local_academic_ticket_system{{/str}}</p>
+                        </div>
+                    {{/replies}}
+                </div>
+
+                {{#can_rate}}
+                    <div class="glass-panel rounded-3xl p-8 border-t-4 border-brand animate-bounce-slight shadow-xl">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center text-secondary-solid mb-4">
+                                <i class="fas fa-star text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-black text-gray-800 mb-2">How was your experience?</h3>
+                            <p class="text-sm text-gray-500 mb-6 font-medium">Your feedback helps us improve our service.</p>
+
+                            <form method="post" action="view.php?id={{ticket.id}}&action=submit_feedback" class="w-full max-w-md">
+                            <input type="hidden" name="sesskey" value="{{sesskey}}">
+
+                            <div class="rating-group mb-6">
+                                {{#rating_options}}
+                                    <input type="radio" id="star{{val}}" name="rating" value="{{val}}" required>
+                                    <label for="star{{val}}">
+                                        <i class="fas fa-star"></i>
+                                    </label>
+                                {{/rating_options}}
+                            </div>
+
+                            <textarea name="feedback_comment"
+                                      class="w-full p-4 rounded-2xl border border-gray-200 bg-white/50 focus-ring-brand focus:border-brand outline-none text-sm font-medium mb-4 transition-all"
+                                      placeholder="Any additional comments? (Optional)"></textarea>
+
+                            <!-- زر التقييم يأخذ لون Secondary وعند الـ Hover يتحول لـ Primary -->
+                            <button type="submit" class="btn-secondary-solid w-full py-4 rounded-2xl text-white font-bold shadow-lg shadow-brand">
+                                <i class="fas fa-paper-plane"></i> Submit Feedback
+                            </button>
+                            </form>
+                        </div>
+                    </div>
+                {{/can_rate}}
+
+                {{#has_feedback}}
+                    <div class="glass-panel rounded-3xl p-6 bg-gradient-to-r from-emerald-50 to-white border-r-8 border-emerald-500 shadow-lg">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
+                                <i class="fas fa-check-circle text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-gray-800">Feedback Submitted</h4>
+                                <div class="flex text-amber-500 my-1">
+                                    {{#feedback_data.stars}}<i class="fas fa-star text-xs"></i>{{/feedback_data.stars}}
+                                </div>
+                                {{#feedback_data.comment}}
+                                    <p class="text-xs text-gray-600 font-medium italic mt-2 bg-white/50 p-3 rounded-lg border border-white">"{{.}}"</p>
+                                {{/feedback_data.comment}}
+                            </div>
+                        </div>
+                    </div>
+                {{/has_feedback}}
+
+                {{^ticket.status_closed}}
+                    <div class="glass-panel rounded-3xl p-8 border-t-4 border-brand">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-pen text-primary-solid"></i> {{#str}}add_reply_heading, local_academic_ticket_system{{/str}}
+                        </h3>
+
+                        <div id="presence-container" class="hidden mb-6 transition-all duration-500 ease-out">
+                            {{#show_presence_list}}
+                                <div class="presence-wrapper">
+                                    <div class="presence-indicator">
+                                        <div class="pulsing-dot"></div>
+                                        <span class="presence-text">Live Viewing</span>
+                                    </div>
+                                    <div id="presence-list" class="presence-avatars">
+                                    </div>
+                                </div>
+                            {{/show_presence_list}}
+                        </div>
+
+                        <form method="post" action="view.php?id={{ticket.id}}" enctype="multipart/form-data">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+
+                        <div class="mb-6 bg-white/60 rounded-xl p-1 backdrop-blur-sm">
+                            {{{editor_html}}}
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-600 mb-2 flex items-center gap-2">
+                                <i class="fas fa-paperclip text-secondary-solid"></i> {{#str}}attach_files_optional, local_academic_ticket_system{{/str}}
+                            </label>
+
+                            <div id="drop-zone" class="file-upload-zone group transition-all duration-300 hover-border-secondary">
+                                <div class="flex flex-col items-center justify-center py-8 text-center" id="upload-placeholder">
+                                    <div class="upload-icon-wrapper mb-4 group-hover:bg-brand-light transition-colors">
+                                        <i class="fas fa-cloud-upload-alt text-3xl text-primary-solid group-hover-text-secondary transition-transform"></i>
+                                    </div>
+                                    <p class="text-sm font-bold text-gray-500 group-hover-text-secondary transition-colors" id="file-chosen-text">
+                                        {{#str}}click_to_upload, local_academic_ticket_system{{/str}}
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-1">PDF, JPG, PNG (Max 5MB)</p>
+                                </div>
+
+                                <div id="selected-files-list" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 p-4">
+                                </div>
+
+                                <input type="file" id="reply_file_input" name="reply_files[]" multiple class="absolute inset-0 opacity-0 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- زر إرسال الرد يأخذ لون Primary وعند الـ Hover يتحول لـ Secondary -->
+                        <button type="submit" class="btn-primary-solid w-full sm:w-auto px-8 py-3.5 rounded-2xl text-white font-bold text-lg shadow-lg shadow-brand">
+                            <i class="fas fa-paper-plane"></i> {{#str}}send_reply_button, local_academic_ticket_system{{/str}}
+                        </button>
+                        </form>
+                    </div>
+                {{/ticket.status_closed}}
+            </div>
+
+            {{#has_manage_capability}}
+                <div class="lg:col-span-1 space-y-8">
+
+                    <div class="glass-panel rounded-3xl p-5 relative overflow-hidden group">
+                        {{#is_assigned}}
+                            <div class="absolute top-0 right-0 w-16 h-16 bg-green-500/20 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                            <div class="flex items-center gap-4 relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white shadow-lg shadow-green-200">
+                                    <i class="fas fa-user-check text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-0.5">
+                                        {{#str}}assigned_user, local_academic_ticket_system{{/str}}
+                                    </p>
+                                    <p class="text-lg font-extrabold text-gray-800 leading-tight">
+                                        {{assigned_user_name}}
+                                    </p>
+                                </div>
+                            </div>
+                        {{/is_assigned}}
+
+                        {{^is_assigned}}
+                            <div class="absolute top-0 right-0 w-16 h-16 bg-red-500/20 rounded-bl-full -mr-4 -mt-4 animate-pulse"></div>
+                            <div class="flex items-center gap-4 relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-red-200 animate-bounce-slight">
+                                    <i class="fas fa-user-clock text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-red-400 uppercase tracking-wider mb-0.5">
+                                        {{#str}}attention_required, local_academic_ticket_system{{/str}}
+                                    </p>
+                                    <p class="text-lg font-extrabold text-red-600 leading-tight">
+                                        {{#str}}unassigned, local_academic_ticket_system{{/str}}
+                                    </p>
+                                </div>
+                            </div>
+                        {{/is_assigned}}
+                    </div>
+
+                    <div class="glass-panel rounded-3xl p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-20 h-20 bg-brand-light rounded-bl-full -mr-4 -mt-4"></div>
+
+                        <h3 class="text-xl font-extrabold text-gray-800 mb-6 flex items-center gap-2 relative z-10">
+                            <span class="w-8 h-8 rounded-lg bg-brand-light text-primary-solid flex items-center justify-center"><i class="fas fa-cogs"></i></span>
+                            {{#str}}admin_only_label, local_academic_ticket_system{{/str}}
+                        </h3>
+
+                        <div class="space-y-6 relative z-10">
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase mb-2 block ml-1">{{#str}}change_status_label, local_academic_ticket_system{{/str}}</label>
+                                <form class="flex flex-col gap-2" method="post" action="view.php?id={{ticket.id}}&action=update_status">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <div class="relative">
+                                    <select name="status" class="glass-select focus-ring-brand focus:border-brand">
+                                        <option value="{{ticket.status}}" selected disabled hidden>{{ticket.translated_status}}</option>
+                                        <option value="open">Open</option>
+                                        <option value="closed">Closed</option>
+                                        <option value="admin reply">Admin Reply</option>
+                                        <option value="student reply">Student Reply</option>
+                                        <option value="in progress">In Progress</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
+                                <!-- زر الأدمين (Primary -> Secondary) -->
+                                <button type="submit" class="btn-primary-solid w-full py-2.5 px-4 rounded-xl text-white font-bold shadow-md shadow-brand text-sm">
+                                    <i class="fas fa-save"></i> {{#str}}update_status_button, local_academic_ticket_system{{/str}}
+                                </button>
+                                </form>
+                            </div>
+
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase mb-2 block ml-1">{{#str}}change_category_label, local_academic_ticket_system{{/str}}</label>
+                                <form class="flex flex-col gap-2" method="post" action="view.php?id={{ticket.id}}&action=update_category">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <select name="categoryid" class="glass-select focus-ring-brand focus:border-brand">
+                                    {{#categories}}
+                                        <option value="{{id}}" {{#is_selected}}selected{{/is_selected}}>{{title}}</option>
+                                    {{/categories}}
+                                </select>
+                                <!-- زر الأدمين (Secondary -> Primary) لتنويع الألوان -->
+                                <button type="submit" class="btn-secondary-solid w-full py-2.5 px-4 rounded-xl text-white font-bold shadow-md shadow-brand text-sm">
+                                    <i class="fas fa-exchange-alt"></i> {{#str}}update_category_button, local_academic_ticket_system{{/str}}
+                                </button>
+                                </form>
+                            </div>
+
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase mb-2 block ml-1">{{#str}}assign_user_label,local_academic_ticket_system{{/str}}</label>
+                                <form class="flex flex-col gap-2" method="post" action="view.php?id={{ticket.id}}&action=assign_user">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <select name="assigned_to" class="glass-select focus-ring-brand focus:border-brand">
+                                    <option value="0">{{#str}}unassigned, local_academic_ticket_system{{/str}}</option>
+                                    {{#assignable_users}}
+                                        <option value="{{id}}" {{#is_selected}}selected{{/is_selected}}>{{fullname}}</option>
+                                    {{/assignable_users}}
+                                </select>
+                                <!-- زر الأدمين (Primary -> Secondary) -->
+                                <button type="submit" class="btn-primary-solid w-full py-2.5 px-4 rounded-xl text-white font-bold shadow-md shadow-brand text-sm">
+                                    <i class="fas fa-user-plus"></i> {{#str}}assign_user,local_academic_ticket_system{{/str}}
+                                </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-3xl p-6 relative overflow-hidden bg-gradient-to-b from-yellow-50/50 to-white/30 border border-yellow-200/50">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-400/20 rounded-bl-full -mr-4 -mt-4"></div>
+
+                        <h3 class="text-lg font-extrabold text-gray-800 mb-4 flex items-center gap-2 relative z-10">
+                            <i class="fas fa-sticky-note text-yellow-600"></i>
+                            {{#str}}internal_notes_heading, local_academic_ticket_system{{/str}}
+                        </h3>
+
+                        <div class="space-y-3 mb-4 max-h-60 overflow-y-auto custom-scrollbar pr-1">
+                            {{#internal_notes}}
+                                <div class="relative p-3 rounded-xl border {{#is_me}}bg-yellow-100 border-yellow-200{{/is_me}}{{^is_me}}bg-white/60 border-white{{/is_me}} shadow-sm">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold text-gray-700">{{user_name}}</span>
+                                        </div>
+                                        <span class="text-[10px] text-gray-400">{{time}}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-800 leading-snug">{{content}}</p>
+                                </div>
+                            {{/internal_notes}}
+
+                            {{^internal_notes}}
+                                <p class="text-xs text-gray-400 text-center py-2">  {{#str}}no_internal_notes, local_academic_ticket_system{{/str}}</p>
+                            {{/internal_notes}}
+                        </div>
+
+                        <form method="post" action="view.php?id={{ticket.id}}&action=add_internal_comment" class="relative">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <div class="relative">
+                            <input type="text" name="internal_note" required
+                                   class="placeholder:text-center w-full pl-4 pr-10 py-3 rounded-xl text-sm border border-yellow-300 bg-white/80 focus:ring-2 focus:ring-yellow-400 focus:outline-none placeholder-gray-400 shadow-inner"
+                                   placeholder="{{#str}}internal_note_placeholder, local_academic_ticket_system{{/str}}">
+
+                            <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg flex items-center justify-center transition-colors shadow-md border-0">
+                                <i class="fas fa-paper-plane text-xs"></i>
+                            </button>
+                        </div>
+                        </form>
+                    </div>
+
+                    <div class="glass-panel rounded-3xl p-6">
+                        <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-history text-secondary-solid"></i> {{#str}}recent_tickets_heading, local_academic_ticket_system{{/str}}
+                        </h2>
+                        <div class="space-y-3">
+                            {{#latest_tickets}}
+                                <a href="view.php?id={{id}}" class="glass-card p-3 rounded-xl flex items-center justify-between group text-decoration-none hover-border-secondary transition-all">
+                                <div class="min-w-0">
+                                    <p class="text-sm font-bold text-gray-700 truncate group-hover-text-secondary transition-colors">{{title}}</p>
+                                    <p class="text-[10px] text-gray-400">#{{id}}</p>
+                                </div>
+                                <span class="text-[10px] {{status_class}} px-2 py-0.5 rounded-md font-bold">{{status}}</span>
+                                </a>
+                            {{/latest_tickets}}
+                            {{^latest_tickets}}
+                                <div class="text-center py-4 text-gray-400 text-sm">No recent tickets.</div>
+                            {{/latest_tickets}}
+                        </div>
+                    </div>
+
+                    {{#has_ticket_log}}
+                        <div class="glass-panel rounded-3xl p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="fas fa-clipboard-list text-primary-solid"></i> {{#str}}ticket_log, local_academic_ticket_system{{/str}}
+                            </h3>
+                            <div class="max-h-60 overflow-y-auto custom-scrollbar pr-2">
+                                <ul class="space-y-4">
+                                    {{#ticket_log}}
+                                        <li class="relative pl-4 border-l-2 border-brand-light">
+                                            <p class="text-xs text-gray-800 font-medium">{{message}}</p>
+                                            <p class="text-[10px] text-gray-400 mt-1">{{time}}</p>
+                                        </li>
+                                    {{/ticket_log}}
+                                </ul>
+                            </div>
+                        </div>
+                    {{/has_ticket_log}}
+                </div>
+            {{/has_manage_capability}}
+
+        </div>
+    </div>
+
+</div>
+
+{{#js}}
+    require([
+    'local_academic_ticket_system/view_interactions',
+    'local_academic_ticket_system/presence'
+    ], function(viewInteractions, presence) {
+    viewInteractions.init();
+    presence.initHeartbeat({{ticketid}});
+    });
+{{/js}}
