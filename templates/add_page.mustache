@@ -180,7 +180,7 @@
     str.get_string('filesselected', 'local_academic_ticket_system', count).done(function(localizedString) {
     display.html('<span class="text-green-600 font-bold"><i class="fa fa-check-circle"></i> ' + localizedString + '</span>');
     }).fail(function() {
-    // Ignore error
+    return false;
     });
     zone.addClass('active border-brand');
     } else {
@@ -231,6 +231,7 @@
     });
     }
     }).fail(function() {
+    return false;
     });
     }
     }

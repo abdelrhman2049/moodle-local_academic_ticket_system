@@ -745,7 +745,9 @@
     window.playAudioModal = function(url, name) {
     if (typeof window.Swal !== 'undefined') {
     var htmlContent = '<div class="mt-4 flex justify-center"><audio controls autoplay class="w-full max-w-sm audio-player-custom">';
-        htmlContent += '<source src="' + url + '" type="audio/webm">{{#str}}browser_no_audio, local_academic_ticket_system{{/str}}</audio></div>';
+        htmlContent += '<source src="' + url + '" type="audio/webm">';
+        htmlContent += '{{#str}}browser_no_audio, local_academic_ticket_system{{/str}}';
+        htmlContent += '</audio></div>';
 
     window.Swal.fire({
     title: '<div class="text-xl font-extrabold text-gray-800 mb-2">' + name + '</div>',
@@ -818,7 +820,7 @@
     });
     }
     }).fail(function() {
-    // Handle failure silently
+    return false;
     });
     }
     }
