@@ -306,3 +306,5 @@ $string['privacy:metadata:presence:timemodified'] = 'La dernière fois que la pr
 $string['rolespecialist'] = 'Spécialiste du support';
 $string['rolespecialistdescription'] = 'Gère les tickets académiques du département et le flux de travail d\'assistance.';
 $string['academic_ticket_system:specialist'] = 'Recevoir des alertes urgentes en tant que spécialiste';
+$string['assignable_roles'] = 'Rôles assignables';
+$string['assignable_roles_desc'] = 'Sélectionnez les rôles qui peuvent être assignés aux tickets. Les utilisateurs ayant ces rôles apparaîtront dans la liste déroulante d\'assignation.';

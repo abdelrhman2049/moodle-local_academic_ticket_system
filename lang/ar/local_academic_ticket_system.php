@@ -308,3 +308,5 @@ $string['privacy:metadata:presence:timemodified'] = 'آخر وقت تم فيه �
 $string['rolespecialist'] = ' أخصائي دعم فني';
 $string['rolespecialistdescription'] = 'يتولى إدارة التذاكر الأكاديمية للقسم وسير عمل الدعم.';
 $string['academic_ticket_system:specialist'] = 'تلقي الإشعارات العاجلة كأخصائي';
+$string['assignable_roles'] = 'الأدوار القابلة للتعيين';
+$string['assignable_roles_desc'] = 'اختر الأدوار التي يمكن تعيينها للتذاكر. سيظهر المستخدمون الذين يمتلكون هذه الأدوار في القائمة المنسدلة.';

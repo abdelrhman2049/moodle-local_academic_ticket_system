@@ -80,6 +80,20 @@ if ($hassiteconfig) {
         'Support',
         PARAM_TEXT
     ));
+    // Assign Ticket Role.
+
+    $allroles = [];
+    foreach (role_get_names() as $role) {
+        $allroles[$role->shortname] = $role->localname;
+    }
+
+    $settings->add(new admin_setting_configmultiselect(
+        'local_academic_ticket_system/assignable_roles',
+        get_string('assignable_roles', 'local_academic_ticket_system'),
+        get_string('assignable_roles_desc', 'local_academic_ticket_system'),
+        ['specialist'],
+        $allroles
+    ));
 
     $ADMIN->add('localplugins', $settings);
 }

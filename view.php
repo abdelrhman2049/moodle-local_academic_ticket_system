@@ -313,14 +313,22 @@ if ($canmanage) {
         }
     }
 
-    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename
-            FROM {user} u
-            JOIN {role_assignments} ra ON u.id = ra.userid
-            JOIN {role} r ON ra.roleid = r.id
-            WHERE r.shortname IN ('manager', 'editingteacher', 'coursecreator', 'specialist')
-            AND u.deleted = 0 AND u.suspended = 0";
+    $assignableroles = get_config('local_academic_ticket_system', 'assignable_roles');
+    $rolesarray = !empty($assignableroles) ? explode(',', $assignableroles) : ['specialist'];
+    list($inrolesql, $inroleparams) = $DB->get_in_or_equal($rolesarray);
 
-    $assignees = $DB->get_records_sql($sql);
+    $assignableroles = get_config('local_academic_ticket_system', 'assignable_roles');
+    $rolesarray = !empty($assignableroles) ? explode(',', $assignableroles) : ['specialist'];
+    list($inrolesql, $inroleparams) = $DB->get_in_or_equal($rolesarray);
+
+    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename
+        FROM {user} u
+        JOIN {role_assignments} ra ON u.id = ra.userid
+        JOIN {role} r ON ra.roleid = r.id
+        WHERE r.shortname $inrolesql
+        AND u.deleted = 0 AND u.suspended = 0";
+
+    $assignees = $DB->get_records_sql($sql, $inroleparams);
 
     foreach ($assignees as $assignee) {
         $assignableusers[] = [
