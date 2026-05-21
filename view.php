@@ -30,6 +30,12 @@ require_once(__DIR__ . '/lib.php');
 require_login();
 global $USER, $DB, $PAGE, $OUTPUT, $CFG;
 
+/**
+ * Get status string.
+ *
+ * @param string $val
+ * @return string
+ */
 function get_status_str($val) {
     $val = strtolower(trim($val));
     $map = [
@@ -86,18 +92,18 @@ if (!$ticketrecord) {
     die();
 }
 
-$is_manager = has_capability('local/academic_ticket_system:manageticket', $context);
-$is_specialist = has_capability('local/academic_ticket_system:specialist', $context);
+$ismanager = has_capability('local/academic_ticket_system:manageticket', $context);
+$isspecialist = has_capability('local/academic_ticket_system:specialist', $context);
 $currentuserid = $USER->id;
 $ticketuserid = $ticketrecord->userid;
 $assignedto = $ticketrecord->assigned_to;
-$is_assigned_to_me = (!empty($assignedto) && $assignedto == $currentuserid);
-$is_owner = ($ticketuserid == $currentuserid);
+$isassignedtome = (!empty($assignedto) && $assignedto == $currentuserid);
+$isowner = ($ticketuserid == $currentuserid);
 
-$is_admin_view = ($is_manager || $is_specialist || $is_assigned_to_me);
-$show_admin_panel = $is_admin_view;
+$isadminview = ($ismanager || $isspecialist || $isassignedtome);
+$showadminpanel = $isadminview;
 
-if (!$is_admin_view && !$is_owner) {
+if (!$isadminview && !$isowner) {
     echo $OUTPUT->header();
     echo $OUTPUT->render_from_template('local_academic_ticket_system/error_denied', [
         'home_url' => new moodle_url('/local/academic_ticket_system/index.php'),
@@ -106,11 +112,11 @@ if (!$is_admin_view && !$is_owner) {
     die();
 }
 
-$can_reply = ($is_admin_view || $is_owner);
+$canreply = ($isadminview || $isowner);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && confirm_sesskey()) {
     if (isset($_POST['reply_message'])) {
-        if ($can_reply) {
+        if ($canreply) {
             $message = required_param('reply_message', PARAM_CLEANHTML);
             $reply = (object)[
                 'ticket_id' => $id,
@@ -124,13 +130,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && confirm_sesskey()) {
                 if (!empty($_FILES['reply_files']['name'][0])) {
                     foreach ($_FILES['reply_files']['name'] as $key => $name) {
                         if ($_FILES['reply_files']['error'][$key] === UPLOAD_ERR_OK) {
-                            $filerecord = ['contextid' => $context->id, 'component' => 'local_academic_ticket_system', 'filearea' => 'reply_attachment', 'itemid' => $replyid, 'filepath' => '/', 'filename' => clean_param($name, PARAM_FILE), 'userid' => $USER->id];
+                            $filerecord = [
+                                'contextid' => $context->id,
+                                'component' => 'local_academic_ticket_system',
+                                'filearea' => 'reply_attachment',
+                                'itemid' => $replyid,
+                                'filepath' => '/',
+                                'filename' => clean_param($name, PARAM_FILE),
+                                'userid' => $USER->id
+                            ];
                             $fs->create_file_from_pathname($filerecord, $_FILES['reply_files']['tmp_name'][$key]);
                         }
                     }
                 }
                 if (!empty($_FILES['reply_voice']['name']) && $_FILES['reply_voice']['error'] === UPLOAD_ERR_OK) {
-                    $filerecord = ['contextid' => $context->id, 'component' => 'local_academic_ticket_system', 'filearea' => 'reply_attachment', 'itemid' => $replyid, 'filepath' => '/', 'filename' => clean_param($_FILES['reply_voice']['name'], PARAM_FILE), 'userid' => $USER->id];
+                    $filerecord = [
+                        'contextid' => $context->id,
+                        'component' => 'local_academic_ticket_system',
+                        'filearea' => 'reply_attachment',
+                        'itemid' => $replyid,
+                        'filepath' => '/',
+                        'filename' => clean_param($_FILES['reply_voice']['name'], PARAM_FILE),
+                        'userid' => $USER->id
+                    ];
                     try {
                         $fs->create_file_from_pathname($filerecord, $_FILES['reply_voice']['tmp_name']);
                     } catch (Exception $e) {
@@ -139,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && confirm_sesskey()) {
                 }
             }
             $oldstatus = $ticketrecord->status;
-            $newstatus = $is_admin_view ? 'admin reply' : 'student reply';
+            $newstatus = $isadminview ? 'admin reply' : 'student reply';
             $DB->set_field('local_academic_ticket_system_tickets', 'status', $newstatus, ['id' => $id]);
             $a = new stdClass();
             $a->user = fullname($USER);
@@ -150,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && confirm_sesskey()) {
         }
         redirect($PAGE->url);
     }
-    if ($action === 'update_status' && $show_admin_panel) {
+    if ($action === 'update_status' && $showadminpanel) {
         $status = required_param('status', PARAM_TEXT);
         $oldstatus = $ticketrecord->status;
         $DB->set_field('local_academic_ticket_system_tickets', 'status', $status, ['id' => $id]);
@@ -162,14 +184,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && confirm_sesskey()) {
         local_academic_ticket_system_log_action($id, $USER->id, $logmessage, $oldstatus, $status);
         redirect($PAGE->url);
     }
-    if ($action === 'assign_user' && $show_admin_panel) {
-        $assignedto_param = required_param('assigned_to', PARAM_INT);
-        $logmessage = ($assignedto_param > 0) ? get_string('log_assigned', 'local_academic_ticket_system', fullname($DB->get_record('user', ['id' => $assignedto_param]))) : get_string('log_assigned', 'local_academic_ticket_system', get_string('unassigned', 'local_academic_ticket_system'));
-        $DB->set_field('local_academic_ticket_system_tickets', 'assigned_to', $assignedto_param, ['id' => $id]);
-        local_academic_ticket_system_log_action($id, $USER->id, $logmessage, '', $assignedto_param);
+    if ($action === 'assign_user' && $showadminpanel) {
+        $assignedtoparam = required_param('assigned_to', PARAM_INT);
+        if ($assignedtoparam > 0) {
+            $assigneduserrec = $DB->get_record('user', ['id' => $assignedtoparam]);
+            $logmessage = get_string('log_assigned', 'local_academic_ticket_system', fullname($assigneduserrec));
+        } else {
+            $unassignedstr = get_string('unassigned', 'local_academic_ticket_system');
+            $logmessage = get_string('log_assigned', 'local_academic_ticket_system', $unassignedstr);
+        }
+        $DB->set_field('local_academic_ticket_system_tickets', 'assigned_to', $assignedtoparam, ['id' => $id]);
+        local_academic_ticket_system_log_action($id, $USER->id, $logmessage, '', $assignedtoparam);
         redirect($PAGE->url);
     }
-    if ($action === 'update_category' && $show_admin_panel) {
+    if ($action === 'update_category' && $showadminpanel) {
         $catid = required_param('categoryid', PARAM_INT);
         $category = $DB->get_record('local_academic_ticket_system_categories', ['id' => $catid], 'id, title', MUST_EXIST);
         $DB->set_field('local_academic_ticket_system_tickets', 'category_id', $catid, ['id' => $id]);
@@ -177,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && confirm_sesskey()) {
         local_academic_ticket_system_log_action($id, $USER->id, $logmessage, $ticketrecord->category_id, $catid);
         redirect($PAGE->url);
     }
-    if ($action === 'add_internal_comment' && $show_admin_panel) {
+    if ($action === 'add_internal_comment' && $showadminpanel) {
         $commenttext = required_param('internal_note', PARAM_TEXT);
         $note = (object)['ticketid' => $id, 'userid' => $USER->id, 'content' => $commenttext, 'created_at' => time()];
         $DB->insert_record('local_academic_ticket_system_comments', $note);
@@ -185,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && confirm_sesskey()) {
         local_academic_ticket_system_log_action($id, $USER->id, $logmessage, '', '');
         redirect($PAGE->url);
     }
-    if ($action === 'submit_feedback' && !$is_admin_view && $ticketrecord->userid == $USER->id) {
+    if ($action === 'submit_feedback' && !$isadminview && $ticketrecord->userid == $USER->id) {
         $rating = required_param('rating', PARAM_INT);
         $comment = optional_param('feedback_comment', '', PARAM_TEXT);
         if (!$DB->record_exists('local_academic_ticket_system_feedback', ['ticketid' => $id])) {
@@ -202,7 +230,14 @@ $fs = get_file_storage();
 $ticketfiles = $fs->get_area_files($context->id, 'local_academic_ticket_system', 'attachment', $id, "filename", false);
 $ticketattachments = [];
 foreach ($ticketfiles as $f) {
-    $pluginurl = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename());
+    $pluginurl = moodle_url::make_pluginfile_url(
+        $f->get_contextid(),
+        $f->get_component(),
+        $f->get_filearea(),
+        $f->get_itemid(),
+        $f->get_filepath(),
+        $f->get_filename()
+    );
     $mimetype = $f->get_mimetype();
     $filename = $f->get_filename();
     $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
@@ -229,22 +264,30 @@ if (!empty($userids)) {
 $repliesdata = [];
 foreach ($repliesrecords as $r) {
     $ruser = isset($users[$r->userid]) ? clone $users[$r->userid] : null;
-    $ismanager = false;
+    $ismanagerreply = false;
     if ($ruser) {
         $ruser->firstnamephonetic = '';
         $ruser->lastnamephonetic = '';
         $ruser->middlename = '';
         $ruser->alternatename = '';
-        if (has_capability('local/academic_ticket_system:manageticket', $context, $r->userid) ||
-            has_capability('local/academic_ticket_system:specialist', $context, $r->userid) ||
-            (!empty($ticketrecord->assigned_to) && $r->userid == $ticketrecord->assigned_to)) {
-            $ismanager = true;
+        $canmngtkt = has_capability('local/academic_ticket_system:manageticket', $context, $r->userid);
+        $canspectkt = has_capability('local/academic_ticket_system:specialist', $context, $r->userid);
+        $isasgnd = !empty($ticketrecord->assigned_to) && $r->userid == $ticketrecord->assigned_to;
+        if ($canmngtkt || $canspectkt || $isasgnd) {
+            $ismanagerreply = true;
         }
     }
     $rfiles = $fs->get_area_files($context->id, 'local_academic_ticket_system', 'reply_attachment', $r->id, "filename", false);
     $rattachments = [];
     foreach ($rfiles as $rf) {
-        $replyurl = moodle_url::make_pluginfile_url($rf->get_contextid(), $rf->get_component(), $rf->get_filearea(), $rf->get_itemid(), $rf->get_filepath(), $rf->get_filename());
+        $replyurl = moodle_url::make_pluginfile_url(
+            $rf->get_contextid(),
+            $rf->get_component(),
+            $rf->get_filearea(),
+            $rf->get_itemid(),
+            $rf->get_filepath(),
+            $rf->get_filename()
+        );
         $rmimetype = $rf->get_mimetype();
         $rfilename = $rf->get_filename();
         $rext = strtolower(pathinfo($rfilename, PATHINFO_EXTENSION));
@@ -260,7 +303,7 @@ foreach ($repliesrecords as $r) {
         'user' => $ruser ? fullname($ruser) : 'Unknown User',
         'message' => format_text($r->message, FORMAT_HTML),
         'time' => userdate($r->created_at),
-        'is_manager_reply' => $ismanager,
+        'is_manager_reply' => $ismanagerreply,
         'has_reply_attachments' => !empty($rattachments),
         'reply_attachments' => $rattachments,
     ];
@@ -270,7 +313,7 @@ $ticketlog = [];
 $assignableusers = [];
 $latesttickets = [];
 $internalnotes = [];
-if ($show_admin_panel) {
+if ($showadminpanel) {
     if ($DB->get_manager()->table_exists('local_academic_ticket_system_logs')) {
         $logs = $DB->get_records('local_academic_ticket_system_logs', ['ticketid' => $id], 'timemodified DESC');
         $loguserids = [];
@@ -294,12 +337,13 @@ if ($show_admin_panel) {
     $assignableroles = get_config('local_academic_ticket_system', 'assignable_roles');
     $rolesarray = !empty($assignableroles) ? explode(',', $assignableroles) : ['specialist'];
     list($inrolesql, $inroleparams) = $DB->get_in_or_equal($rolesarray);
-    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename, u.email, u.username
-        FROM {user} u
-        JOIN {role_assignments} ra ON u.id = ra.userid
-        JOIN {role} r ON ra.roleid = r.id
-        WHERE r.shortname $inrolesql
-        AND u.deleted = 0 AND u.suspended = 0";
+    $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.firstnamephonetic, " .
+        "u.lastnamephonetic, u.middlename, u.alternatename, u.email, u.username " .
+        "FROM {user} u " .
+        "JOIN {role_assignments} ra ON u.id = ra.userid " .
+        "JOIN {role} r ON ra.roleid = r.id " .
+        "WHERE r.shortname $inrolesql " .
+        "AND u.deleted = 0 AND u.suspended = 0";
     $assignees = $DB->get_records_sql($sql, $inroleparams);
     foreach ($assignees as $assignee) {
         $assignableusers[] = [
@@ -353,20 +397,30 @@ foreach ($categories as $cat) {
 }
 
 $feedbackrecord = $DB->get_record('local_academic_ticket_system_feedback', ['ticketid' => $id]);
-$is_ticket_closed = ($ticketrecord->status === 'closed');
-$canrate = ($is_ticket_closed && !$is_admin_view && !$feedbackrecord);
+$isticketclosed = ($ticketrecord->status === 'closed');
+$canrate = ($isticketclosed && !$isadminview && !$feedbackrecord);
 $ticketowner = $DB->get_record('user', ['id' => $ticketrecord->userid], '*', MUST_EXIST);
 $assigneduser = $ticketrecord->assigned_to ? $DB->get_record('user', ['id' => $ticketrecord->assigned_to]) : null;
 $priority = $ticketrecord->priority;
-$feedbackdata = ($feedbackrecord) ? ['rating' => $feedbackrecord->rating, 'comment' => $feedbackrecord->comment, 'stars' => array_fill(0, $feedbackrecord->rating, true)] : null;
+
+$feedbackdata = null;
+if ($feedbackrecord) {
+    $feedbackdata = [
+        'rating' => $feedbackrecord->rating,
+        'comment' => $feedbackrecord->comment,
+        'stars' => array_fill(0, $feedbackrecord->rating, true)
+    ];
+}
+
 $writereplystr = get_string('write_your_reply', 'local_academic_ticket_system');
-$editorhtml = '<textarea id="reply_message" name="reply_message" rows="5" class="w-full p-4 border rounded-xl" placeholder="' . $writereplystr . '"></textarea>';
+$editorhtml = '<textarea id="reply_message" name="reply_message" rows="5" ' .
+    'class="w-full p-4 border rounded-xl" placeholder="' . $writereplystr . '"></textarea>';
 
 $templatedata = [
     'ticketid' => $id,
     'currentuserid' => $USER->id,
     'run_heartbeat_script' => true,
-    'show_presence_list' => $show_admin_panel,
+    'show_presence_list' => $showadminpanel,
     'ticket' => [
         'id' => $id,
         'title' => format_string($ticketrecord->title),
@@ -381,7 +435,7 @@ $templatedata = [
         'priority_label' => ucfirst($priority),
         'created_by' => fullname($ticketowner),
         'created_at' => userdate($ticketrecord->created_at),
-        'status_closed' => ($is_ticket_closed || !$can_reply),
+        'status_closed' => ($isticketclosed || !$canreply),
         'has_attachments' => !empty($ticketattachments),
         'attachments' => $ticketattachments,
         'priority_urgent' => ($priority === 'urgent'),
@@ -394,7 +448,7 @@ $templatedata = [
     'feedback_data' => $feedbackdata,
     'rating_options' => [['val' => 5], ['val' => 4], ['val' => 3], ['val' => 2], ['val' => 1]],
     'replies' => $repliesdata,
-    'has_manage_capability' => $show_admin_panel,
+    'has_manage_capability' => $showadminpanel,
     'categories' => $catlist,
     'assignable_users' => $assignableusers,
     'assigned_user_name' => $assigneduser ? fullname($assigneduser) : get_string('unassigned', 'local_academic_ticket_system'),

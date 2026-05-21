@@ -212,18 +212,28 @@
     container.items.add(file);
     document.getElementById('voice_note_input').files = container.files;
 
-    $('#recordingStatus').text("{{#str}}recording_finished, local_academic_ticket_system{{/str}}").removeClass('text-red-500').addClass('text-green-600');
+    $('#recordingStatus').text("{{#str}}recording_finished, local_academic_ticket_system{{/str}}")
+    .removeClass('text-red-500').addClass('text-green-600');
     };
 
     mediaRecorder.start();
     $(this).addClass('hidden');
     $('#stopRecord').removeClass('hidden');
-    $('#recordingStatus').text("{{#str}}recording_now, local_academic_ticket_system{{/str}}").removeClass('text-green-600 text-gray-500').addClass('text-red-500');
+    $('#recordingStatus').text("{{#str}}recording_now, local_academic_ticket_system{{/str}}")
+    .removeClass('text-green-600 text-gray-500').addClass('text-red-500');
     } catch (err) {
     str.get_string('nopermission', 'local_academic_ticket_system').done(function(localizedString) {
-    window.alert(localizedString);
+    if (typeof window.Swal !== 'undefined') {
+    window.Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: localizedString
+    });
+    } else {
+    console.error(localizedString);
+    }
     }).fail(function() {
-    // Ignore
+    console.error('No permission');
     });
     }
     }

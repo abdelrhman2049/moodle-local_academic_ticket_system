@@ -31,7 +31,6 @@ if ($hassiteconfig) {
         get_string('pluginname', 'local_academic_ticket_system')
     );
 
-    // Enabled.
     $settings->add(new admin_setting_configcheckbox(
         'local_academic_ticket_system/enabled',
         get_string('enable', 'local_academic_ticket_system'),
@@ -39,7 +38,6 @@ if ($hassiteconfig) {
         1
     ));
 
-    // Navbar integration.
     $settings->add(new admin_setting_configcheckbox(
         'local_academic_ticket_system/add_to_navbar',
         get_string('add_to_navbar', 'local_academic_ticket_system'),
@@ -47,7 +45,6 @@ if ($hassiteconfig) {
         1
     ));
 
-    // Support Email.
     $settings->add(new admin_setting_configtext(
         'local_academic_ticket_system/support_email',
         get_string('support_email', 'local_academic_ticket_system'),
@@ -56,7 +53,6 @@ if ($hassiteconfig) {
         PARAM_EMAIL
     ));
 
-    // Primary Color.
     $settings->add(new admin_setting_configcolourpicker(
         'local_academic_ticket_system/primary_color',
         get_string('primary_color', 'local_academic_ticket_system'),
@@ -64,7 +60,6 @@ if ($hassiteconfig) {
         '#2563eb'
     ));
 
-    // Secondary Color.
     $settings->add(new admin_setting_configcolourpicker(
         'local_academic_ticket_system/secondary_color',
         get_string('secondary_color', 'local_academic_ticket_system'),
@@ -72,7 +67,6 @@ if ($hassiteconfig) {
         '#4f46e5'
     ));
 
-    // First Department .
     $settings->add(new admin_setting_configtext(
         'local_academic_ticket_system/system_name',
         get_string('system_name', 'local_academic_ticket_system'),
@@ -80,10 +74,9 @@ if ($hassiteconfig) {
         'Support',
         PARAM_TEXT
     ));
-    // Assign Ticket Role.
 
     $allroles = [];
-    $excluded_roles = [
+    $excludedroles = [
         'student',
         'guest',
         'user',
@@ -91,7 +84,7 @@ if ($hassiteconfig) {
         'teacher'
     ];
     foreach (role_get_names() as $role) {
-        if (!in_array($role->shortname, $excluded_roles)) {
+        if (!in_array($role->shortname, $excludedroles)) {
             $allroles[$role->shortname] = $role->localname;
         }
     }

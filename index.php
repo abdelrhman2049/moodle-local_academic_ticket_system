@@ -48,15 +48,16 @@ $customcss = "
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = 3;
 $offset = $page * $perpage;
-$is_manager = has_capability('local/academic_ticket_system:manageticket', $context);
-$is_specialist = has_capability('local/academic_ticket_system:specialist', $context);
-$canmanage = $is_manager || $is_specialist;
+$ismanager = has_capability('local/academic_ticket_system:manageticket', $context);
+$isspecialist = has_capability('local/academic_ticket_system:specialist', $context);
+$canmanage = $ismanager || $isspecialist;
 $canaddticket = has_capability('local/academic_ticket_system:addticket', $context);
 $canaddcategory = has_capability('local/academic_ticket_system:addcategory', $context);
-$userselects = "u.firstname, u.lastname, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename";
+$userselects1 = "u.firstname, u.lastname, u.firstnamephonetic";
+$userselects2 = "u.lastnamephonetic, u.middlename, u.alternatename";
 if ($canmanage) {
     $totalcount = $DB->count_records('local_academic_ticket_system_tickets');
-    $sql = "SELECT t.*, c.title AS category_title, $userselects
+    $sql = "SELECT t.*, c.title AS category_title, $userselects1, $userselects2
             FROM {local_academic_ticket_system_tickets} t
             LEFT JOIN {local_academic_ticket_system_categories} c ON t.category_id = c.id
             LEFT JOIN {user} u ON t.userid = u.id
@@ -64,7 +65,7 @@ if ($canmanage) {
     $tickets = $DB->get_records_sql($sql, [], $offset, $perpage);
 } else {
     $totalcount = $DB->count_records_select('local_academic_ticket_system_tickets', 'userid = ? OR assigned_to = ?', [$USER->id, $USER->id]);
-    $sql = "SELECT t.*, c.title AS category_title, $userselects
+    $sql = "SELECT t.*, c.title AS category_title, $userselects1, $userselects2
             FROM {local_academic_ticket_system_tickets} t
             LEFT JOIN {local_academic_ticket_system_categories} c ON t.category_id = c.id
             LEFT JOIN {user} u ON t.userid = u.id
@@ -72,20 +73,21 @@ if ($canmanage) {
             ORDER BY t.created_at DESC";
     $tickets = $DB->get_records_sql($sql, [$USER->id, $USER->id], $offset, $perpage);
 }
-$has_my_assignment = false;
+$hasmyassignment = false;
 $assignedusersids = [];
 foreach ($tickets as $ticket) {
     if (!empty($ticket->assigned_to)) {
         $assignedusersids[$ticket->assigned_to] = $ticket->assigned_to;
     }
     if ($ticket->assigned_to == $USER->id) {
-        $has_my_assignment = true;
+        $hasmyassignment = true;
     }
 }
 $assignedusers = [];
 if (!empty($assignedusersids)) {
     list($inorsql, $inparams) = $DB->get_in_or_equal($assignedusersids);
-    $assignedusers = $DB->get_records_select('user', "id $inorsql", $inparams, '', 'id, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename');
+    $userfields = 'id, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename';
+    $assignedusers = $DB->get_records_select('user', "id $inorsql", $inparams, '', $userfields);
 }
 $totalclosedglobal = $DB->count_records('local_academic_ticket_system_tickets', ['status' => 'closed']);
 $totalopenglobal = $DB->count_records_select('local_academic_ticket_system_tickets', "status != 'closed'");
@@ -138,7 +140,7 @@ if ($canmanage) {
     $categories = $DB->get_records('local_academic_ticket_system_categories');
     $catstats = [];
     if (!empty($categories)) {
-        $sqlstats = "SELECT category_id, 
+        $sqlstats = "SELECT category_id,
                             SUM(CASE WHEN status = 'closed' THEN 1 ELSE 0 END) AS closed_count,
                             SUM(CASE WHEN status != 'closed' THEN 1 ELSE 0 END) AS open_count
                      FROM {local_academic_ticket_system_tickets}
@@ -188,7 +190,7 @@ $templatedata = [
     'showing_from'          => $totalcount > 0 ? $offset + 1 : 0,
     'showing_to'            => min($offset + $perpage, $totalcount),
     'total_records'         => $totalcount,
-    'show_assignment_column' => ($canmanage || $has_my_assignment),
+    'show_assignment_column' => ($canmanage || $hasmyassignment),
 ];
 echo $OUTPUT->header();
 echo html_writer::tag('style', $customcss);
