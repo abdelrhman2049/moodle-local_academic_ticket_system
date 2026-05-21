@@ -22,13 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Extends the navigation to include the ticket system.
  * Uses custommenuitems injection for Moodle 4.0+ to force display in Primary Nav.
  *
- * @param global_navigation $navigation
+ * @param global_navigation $navigation The navigation object
  * @return void
  */
 function local_academic_ticket_system_extend_navigation(global_navigation $navigation) {
@@ -46,7 +44,7 @@ function local_academic_ticket_system_extend_navigation(global_navigation $navig
     }
 
     $url = new moodle_url('/local/academic_ticket_system/index.php');
-    $raw_url = '/local/academic_ticket_system/index.php';
+    $rawurl = '/local/academic_ticket_system/index.php';
     $title = get_string('pluginname', 'local_academic_ticket_system');
 
     $pendingcount = 0;
@@ -71,10 +69,10 @@ function local_academic_ticket_system_extend_navigation(global_navigation $navig
     }
 
     if ($CFG->branch >= 400) {
-        if (stripos($CFG->custommenuitems, $raw_url) !== false) {
+        if (stripos($CFG->custommenuitems, $rawurl) !== false) {
             $nodes = explode("\n", $CFG->custommenuitems);
             foreach ($nodes as $key => $node) {
-                if (stripos($node, $raw_url) !== false) {
+                if (stripos($node, $rawurl) !== false) {
                     unset($nodes[$key]);
                 }
             }
@@ -82,8 +80,8 @@ function local_academic_ticket_system_extend_navigation(global_navigation $navig
         }
 
         $nodes = explode("\n", $CFG->custommenuitems);
-        $new_node = $title . "|" . $raw_url;
-        array_unshift($nodes, $new_node);
+        $newnode = $title . "|" . $rawurl;
+        array_unshift($nodes, $newnode);
         $CFG->custommenuitems = implode("\n", $nodes);
     } else {
         $node = $navigation->add(
@@ -100,6 +98,15 @@ function local_academic_ticket_system_extend_navigation(global_navigation $navig
 
 /**
  * Serves ticket attachments and reply attachments.
+ *
+ * @param \stdClass $course The course object
+ * @param \stdClass $cm The course module object
+ * @param \context $context The context object
+ * @param string $filearea The file area
+ * @param array $args Extra arguments
+ * @param bool $forcedownload Whether or not to force download
+ * @param array $options Additional options
+ * @return void
  */
 function local_academic_ticket_system_pluginfile($course, $cm, $context, $filearea, $args,
                                                  $forcedownload, array $options = []) {
@@ -132,28 +139,38 @@ function local_academic_ticket_system_pluginfile($course, $cm, $context, $filear
 
 /**
  * Returns CSS classes based on ticket status.
+ *
+ * @param string $status The ticket status
+ * @return string The CSS classes for the status badge
  */
 function local_academic_ticket_system_get_class($status) {
     switch ($status) {
         case 'urgent':
-            return 'bg-red-600 text-white font-bold px-3 py-1 rounded-full shadow-md';
+            return 'bg-red-600 text-white font-bold px-3 py-1 rounded-full shadow-md animate-pulse';
         case 'open':
-            return 'bg-blue-500 text-white px-3 py-1 rounded-full';
+            return 'bg-primary-solid text-white font-bold px-3 py-1 rounded-full shadow-sm';
         case 'admin reply':
-            return 'bg-purple-500 text-white px-3 py-1 rounded-full';
+            return 'bg-secondary-solid text-white font-bold px-3 py-1 rounded-full shadow-sm';
         case 'student reply':
-            return 'bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full';
+            return 'bg-brand-light text-primary-solid font-bold px-3 py-1 rounded-full border border-brand-light';
         case 'in progress':
-            return 'bg-indigo-500 text-white px-3 py-1 rounded-full';
+            return 'bg-grad-primary text-white font-bold px-3 py-1 rounded-full shadow-md';
         case 'closed':
-            return 'bg-gray-400 text-white px-3 py-1 rounded-full';
+            return 'bg-gray-200 text-gray-500 font-bold px-3 py-1 rounded-full border border-gray-300';
         default:
-            return 'bg-gray-100 text-gray-800 px-3 py-1 rounded-full';
+            return 'bg-gray-100 text-gray-600 font-bold px-3 py-1 rounded-full border border-gray-200';
     }
 }
 
 /**
  * Logs a ticket action to the database.
+ *
+ * @param int $tid The ticket ID
+ * @param int $uid The user ID performing the action
+ * @param string $act The action name
+ * @param mixed $old The old value (optional)
+ * @param mixed $new The new value (optional)
+ * @return int|bool The new record ID or false on failure
  */
 function local_academic_ticket_system_log_action($tid, $uid, $act, $old = null, $new = null) {
     global $DB;

@@ -30,14 +30,28 @@ use core_external\external_value;
 use core_external\external_single_structure;
 use moodle_url;
 
+/**
+ * Class check_urgent to handle checking for urgent tickets via AJAX.
+ */
 class check_urgent extends external_api {
 
+    /**
+     * Returns description of method parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters() {
         return new external_function_parameters([
             'lastcheck' => new external_value(PARAM_INT, '', VALUE_DEFAULT, 0)
         ]);
     }
 
+    /**
+     * Executes the API call to check for urgent tickets.
+     *
+     * @param int $lastcheck Timestamp of the last check.
+     * @return array Ticket information and status.
+     */
     public static function execute($lastcheck) {
         global $DB;
 
@@ -83,6 +97,11 @@ class check_urgent extends external_api {
         ];
     }
 
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns() {
         return new external_single_structure([
             'status' => new external_value(PARAM_TEXT, ''),

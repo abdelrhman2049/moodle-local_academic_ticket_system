@@ -32,13 +32,29 @@ use core_external\external_single_structure;
 use Exception;
 use stdClass;
 
+/**
+ * Class update_presence to handle active viewers in a ticket.
+ */
 class update_presence extends external_api {
+
+    /**
+     * Returns description of method parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters() {
         return new external_function_parameters([
             'ticketid' => new external_value(PARAM_INT, '')
         ]);
     }
 
+    /**
+     * Executes the API call to update user presence.
+     *
+     * @param int $ticketid The ticket ID.
+     * @return array Status and list of viewers.
+     * @throws \moodle_exception
+     */
     public static function execute($ticketid) {
         global $DB, $USER, $OUTPUT;
 
@@ -60,7 +76,8 @@ class update_presence extends external_api {
         $presence->userid = $USER->id;
         $presence->timemodified = time();
 
-        if ($existing = $DB->get_record('local_academic_ticket_system_presence', ['ticketid' => $ticketid, 'userid' => $USER->id])) {
+        $conditions = ['ticketid' => $ticketid, 'userid' => $USER->id];
+        if ($existing = $DB->get_record('local_academic_ticket_system_presence', $conditions)) {
             $presence->id = $existing->id;
             $DB->update_record('local_academic_ticket_system_presence', $presence);
         } else {
@@ -92,6 +109,11 @@ class update_presence extends external_api {
         ];
     }
 
+    /**
+     * Returns description of method result value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns() {
         return new external_single_structure([
             'status' => new external_value(PARAM_TEXT, ''),

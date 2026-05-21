@@ -83,8 +83,17 @@ if ($hassiteconfig) {
     // Assign Ticket Role.
 
     $allroles = [];
+    $excluded_roles = [
+        'student',
+        'guest',
+        'user',
+        'frontpage',
+        'teacher'
+    ];
     foreach (role_get_names() as $role) {
-        $allroles[$role->shortname] = $role->localname;
+        if (!in_array($role->shortname, $excluded_roles)) {
+            $allroles[$role->shortname] = $role->localname;
+        }
     }
 
     $settings->add(new admin_setting_configmultiselect(

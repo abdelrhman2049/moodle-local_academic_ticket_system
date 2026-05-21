@@ -13,5 +13,8 @@ export const init = (alertData) => {
         if (result.isConfirmed && alertData.redirect) {
             window.location.href = alertData.redirect;
         }
+        return true;
+    }).catch(() => {
+        return false;
     });
 };

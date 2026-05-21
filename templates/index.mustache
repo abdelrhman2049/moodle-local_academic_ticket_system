@@ -19,23 +19,60 @@
     @copyright  2026 learn-ix support@learn-ix.com
     @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
+{{!
+    @template local_academic_ticket_system/index
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
+    Example context (json):
+    {
+        "user_name": "Admin User",
+        "currentyear": "2026",
+        "has_manage_capability": true,
+        "total_tickets": "100",
+        "total_closed_tickets": "75",
+        "total_open_tickets": "25",
+        "categories": [
+            {
+                "title": "IT Support",
+                "open_tickets": "10",
+                "closed_tickets": "40"
+            }
+        ],
+        "has_addtick_capability": true,
+        "has_addCat_capability": true,
+        "tickets": [
+            {
+                "is_action_needed": true,
+                "view_url": "#",
+                "id": "101",
+                "title": "Login Issue",
+                "created_at": "2026-05-21",
+                "status_class": "text-green-600",
+                "status": "Open",
+                "category_title": "IT Support",
+                "priority": "high",
+                "created_by": "Student One",
+                "assigned_to": "Admin User"
+            }
+        ],
+        "has_pagination": true,
+        "showing_from": "1",
+        "showing_to": "10",
+        "total_records": "50",
+        "prev_url": "#",
+        "next_url": "#",
+        "pagination": [
+            {
+                "pagurl": "#",
+                "active": true,
+                "pagnumber": "1"
+            }
+        ]
+    }
+}}
 <div class="ats-container relative">
-    <div class="fixed inset-0 z-[-1] bg-gray-100 overflow-hidden">
-        <div class="blob blob-1 rounded-full"></div>
-        <div class="blob blob-2 rounded-full"></div>
-        <div class="blob blob-3 rounded-full"></div>
-        <div class="absolute inset-0 bg-white/60 backdrop-blur-[60px]"></div>
-    </div>
-
     <div class="container mx-auto p-4 sm:p-6 lg:p-10 max-w-7xl relative z-10 min-h-screen flex flex-col">
-
         <header class="glass-panel rounded-3xl p-8 mb-10 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-500 hover:shadow-2xl">
             <div class="flex items-center gap-6">
-                <!-- أيقونة الهيدر بلون الـ Primary الصريح -->
                 <div class="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition-all duration-300 shadow-brand" style="background-color: var(--ats-primary);">
                     <i class="fas fa-headset text-4xl text-white"></i>
                 </div>
@@ -48,7 +85,6 @@
                     </p>
                 </div>
             </div>
-
             <div class="glass-card px-6 py-3 rounded-2xl flex items-center gap-3">
                 <div class="bg-green-100 p-2 rounded-full">
                     <i class="fas fa-calendar-day text-green-600"></i>
@@ -65,7 +101,6 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                     <i class="fas fa-chart-pie text-brand mr-3"></i> {{#str}}live_stats_heading, local_academic_ticket_system{{/str}}
                 </h2>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="glass-card rounded-3xl p-6 relative overflow-hidden group">
                         <div class="absolute -right-6 -top-6 w-24 h-24 bg-brand-light rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
@@ -112,7 +147,6 @@
         {{/has_manage_capability}}
 
         <div class="glass-panel rounded-3xl p-1 shadow-2xl relative overflow-hidden">
-
             <div class="bg-white/40 p-6 sm:p-8 border-b border-white/50 flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
                     <h2 class="text-2xl font-extrabold text-gray-800 flex items-center gap-3">
@@ -133,16 +167,20 @@
                     </div>
 
                     {{#has_addtick_capability}}
-                        <a href="add.php" class="btn-action text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-brand flex items-center gap-2 transform hover:-translate-y-1 text-decoration-none hover:opacity-90 transition-opacity" style="background-color: var(--ats-primary);">
+                        <a href="add.php" class="btn-create-ticket btn-action text-white px-6 rounded-xl font-bold shadow-lg shadow-brand flex items-center gap-2 h-12 transform hover:-translate-y-1 text-decoration-none transition-all" style="background-color: var(--ats-primary);">
                             <i class="fa-solid fa-plus-circle"></i>
                             <span class="sm:inline">{{#str}}create_ticket, local_academic_ticket_system{{/str}}</span>
                         </a>
                     {{/has_addtick_capability}}
 
                     {{#has_addCat_capability}}
-                        <a href="add_category.php" class="btn-action text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-brand flex items-center gap-2 transform hover:-translate-y-1 text-decoration-none hover:opacity-90 transition-opacity" style="background-color: var(--ats-secondary);">
+                        <a href="add_category.php"
+                           class="btn-action text-white rounded-xl font-bold shadow-lg shadow-brand flex items-center justify-center h-12 w-12 transform hover:-translate-y-1 text-decoration-none hover:opacity-90 transition-opacity"
+                           style="background-color: var(--ats-secondary);"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="{{#str}}add_department, local_academic_ticket_system{{/str}}">
                             <i class="fa-solid fa-layer-group"></i>
-                            <span class="sm:inline">{{#str}}add_department, local_academic_ticket_system{{/str}}</span>
                         </a>
                     {{/has_addCat_capability}}
                 </div>
@@ -151,89 +189,64 @@
             <div class="p-4 sm:p-6 overflow-x-auto">
                 <div class="bg-white/50 rounded-2xl border border-white/60 overflow-scroll backdrop-blur-sm">
                     <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm bg-white">
-                        <table class="w-full text-right border-collapse" id="ticketsTable">
-                            <thead>
-                            <tr class="bg-gray-50/80 border-b border-gray-200">
-                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}id, local_academic_ticket_system{{/str}}</th>
-                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}title, local_academic_ticket_system{{/str}}</th>
-                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">{{#str}}status, local_academic_ticket_system{{/str}}</th>
-                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}category_title, local_academic_ticket_system{{/str}}</th>
-                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}priority, local_academic_ticket_system{{/str}}</th>
-
-                                {{#has_manage_capability}}
-                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}created_by, local_academic_ticket_system{{/str}}</th>
-                                    <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500">{{#str}}assigned_to_label, local_academic_ticket_system{{/str}}</th>
-                                {{/has_manage_capability}}
-
-                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">{{#str}}actions, local_academic_ticket_system{{/str}}</th>
+                        <table class="w-full text-right border-collapse text-xs" id="ticketsTable">
+                            <thead class="bg-gray-50/80">
+                            <tr class="border-b border-gray-100">
+                                <th class="px-3 py-2 font-bold uppercase text-gray-400">{{#str}}id, local_academic_ticket_system{{/str}}</th>
+                                <th class="px-3 py-2 font-bold uppercase text-gray-400">{{#str}}title, local_academic_ticket_system{{/str}}</th>
+                                <th class="px-3 py-2 font-bold uppercase text-gray-400 text-center">{{#str}}status, local_academic_ticket_system{{/str}}</th>
+                                <th class="px-3 py-2 font-bold uppercase text-gray-400">{{#str}}category_title, local_academic_ticket_system{{/str}}</th>
+                                <th class="px-3 py-2 font-bold uppercase text-gray-400">{{#str}}priority, local_academic_ticket_system{{/str}}</th>
+                                {{#show_assignment_column}}
+                                    <th class="px-3 py-2 font-bold uppercase text-gray-400">{{#str}}my_assignment, local_academic_ticket_system{{/str}}</th>
+                                {{/show_assignment_column}}
+                                <th class="px-3 py-2 font-bold uppercase text-gray-400 text-center">{{#str}}actions, local_academic_ticket_system{{/str}}</th>
                             </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
+                            <tbody class="divide-y divide-gray-50">
                             {{#tickets}}
-                                <tr class="hover:bg-brand-light transition-all duration-200 group ticket-row">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="relative inline-flex items-center">
-                                            {{#is_action_needed}}
-                                                <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+                                <tr class="hover:bg-brand-light/30 transition-colors duration-150 group">
+                                    <td class="px-3 py-2">
+                                        <span class="font-mono text-[10px] font-bold bg-slate-50 text-slate-500 px-2 py-0.5 rounded border">#{{id}}</span>
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        <div class="font-semibold text-gray-800 text-xs truncate max-w-[150px]">
+                                            <a href="{{view_url}}" class="text-decoration-none text-gray-800">{{title}}</a>
+                                        </div>
+                                        <div class="text-[9px] text-gray-400 mt-0.5">
+                                            {{created_at}}
+                                        </div>
+                                    </td>
+                                    <td class="px-3 py-2 text-center">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold border whitespace-nowrap {{status_class}}">
+                    {{status}}
+                </span>
+                                    </td>
+                                    <td class="px-3 py-2">
+                <span class="text-[10px] bg-indigo-50 px-2 py-0.5 rounded text-indigo-600 font-bold">
+                    {{category_title}}
+                </span>
+                                    </td>
+                                    <td class="px-3 py-2">
+                <span class="text-[9px] font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-600 uppercase">
+                    {{priority}}
+                </span>
+                                    </td>
+                                    {{#show_assignment_column}}
+                                        <td class="px-3 py-2">
+                                            {{#is_assigned_to_me}}
+                                                <span class="bg-green-50 text-green-700 px-2 py-0.5 rounded text-[9px] font-bold border border-green-100">
+                                                    {{#str}}assigned_to_me, local_academic_ticket_system{{/str}}
                                                 </span>
-                                            {{/is_action_needed}}
-                                            <span class="font-mono text-xs font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded border border-slate-200 shadow-sm">
-                                                <a href="{{view_url}}" class="text-decoration-none text-slate-600 hover-text-brand">#{{id}}</a>
-                                            </span>
-                                        </div>
-                                    </td>
-
-                                    <td class="px-6 py-4">
-                                        <div class="max-w-xs md:max-w-sm">
-                                            <div class="font-semibold text-gray-900 group-hover-text-brand truncate transition-colors"><a href="{{view_url}}" class="text-decoration-none text-gray-900 group-hover-text-brand">{{title}}</a></div>
-                                            <div class="text-[11px] text-gray-400 mt-1.5 flex items-center gap-1.5">
-                                                <i class="far fa-calendar-alt"></i> {{created_at}}
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td class="px-6 py-4 text-center">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide border {{status_class}}">
-                                            <span class="w-1.5 h-1.5 rounded-full mr-1.5 bg-current"></span>
-                                            {{status}}
-                                        </span>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="text-sm bg-brand-light px-2 py-1 rounded text-brand-secondary font-bold">
-                                            {{category_title}}
-                                        </span>
-                                    </td>
-
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-xs font-bold px-2 py-1 rounded bg-gray-100 text-gray-700 uppercase priority-{{priority}}">
-                                                {{priority}}
-                                            </span>
-                                        </div>
-                                    </td>
-
-                                    {{#has_manage_capability}}
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-8 h-8 rounded-full bg-brand-light flex items-center justify-center text-brand border border-brand-light shadow-inner">
-                                                    <i class="fas fa-user-circle text-lg"></i>
-                                                </div>
-                                                <span class="text-sm font-semibold text-gray-700">{{created_by}}</span>
-                                            </div>
+                                            {{/is_assigned_to_me}}
+                                            {{^is_assigned_to_me}}
+                                                <span class="text-gray-300 text-[10px]">-</span>
+                                            {{/is_assigned_to_me}}
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-gray-500 italic">
-                                            {{#assigned_to}}{{assigned_to}}{{/assigned_to}}
-                                            {{^assigned_to}}<span class="text-gray-300">غير محدد</span>{{/assigned_to}}
-                                        </td>
-                                    {{/has_manage_capability}}
-
-                                    <td class="px-6 py-4 text-center">
-                                        <a href="{{view_url}}"
-                                           class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-brand-light text-brand hover:bg-brand hover:text-white shadow-sm border border-brand-light transition-all duration-300 group/btn text-decoration-none">
-                                            <i class="fas fa-chevron-left group-hover/btn:-translate-x-1 transition-transform"></i>
+                                    {{/show_assignment_column}}
+                                    <td class="px-3 py-2 text-center">
+                                        <a href="{{view_url}}" class="inline-flex items-center justify-center w-7 h-7 rounded-lg text-decoration-none ats-action-icon">
+                                            <i class="fas fa-chevron-left text-[9px]"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -241,7 +254,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     {{^tickets}}
                         <div class="flex flex-col items-center justify-center py-16 px-4">
                             <div class="relative mb-6">
@@ -250,17 +262,14 @@
                             </div>
                             <h3 class="text-2xl font-extrabold text-gray-800 mb-2">{{#str}}no_tickets_title, local_academic_ticket_system{{/str}}</h3>
                             <p class="text-gray-500 max-w-md text-center mb-8">{{#str}}no_tickets_message, local_academic_ticket_system{{/str}}</p>
-                            <!-- زر البدء في حالة الفراغ بلون صريح -->
                             <a href="add.php" class="btn-action text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-brand text-decoration-none hover:opacity-90 transition-opacity" style="background-color: var(--ats-primary);">
                                 {{#str}}start_new_ticket_btn, local_academic_ticket_system{{/str}}
                             </a>
                         </div>
                     {{/tickets}}
-
                 </div>
                 {{#has_pagination}}
                     <div class="mt-10 flex flex-col md:flex-row items-center justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm gap-4">
-
                         <div class="text-sm font-medium text-slate-500 flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-brand"></span>
                             {{#str}} showing, local_academic_ticket_system {{/str}}
@@ -271,31 +280,23 @@
                             <b class="text-slate-900">{{total_records}}</b>
                             {{#str}} tickets_count, local_academic_ticket_system {{/str}}
                         </div>
-
                         <nav class="flex items-center gap-2" aria-label="Pagination">
                             {{#prev_url}}
-                                <a href="{{prev_url}}"
-                                   class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-brand hover:text-white hover:border-brand transition-all duration-200 shadow-sm flex-shrink-0 text-decoration-none"
-                                   title="{{#str}} previous {{/str}}">
+                                <a href="{{prev_url}}" class="flex items-center justify-center w-10 h-10 rounded-xl ats-pagination-btn text-decoration-none" title="{{#str}} previous {{/str}}">
                                     <i class="fas fa-chevron-left text-xs"></i>
                                 </a>
                             {{/prev_url}}
 
                             <div class="flex items-center gap-2">
                                 {{#pagination}}
-                                    <a href="{{pagurl}}"
-                                       class="flex items-center justify-center w-10 h-10 rounded-xl text-sm font-bold transition-all duration-200 flex-shrink-0 text-decoration-none
-                                           {{#active}} bg-brand text-white shadow-md shadow-brand {{/active}}
-                                           {{^active}} bg-white border border-slate-200 text-slate-600 hover:border-brand-light hover:text-brand {{/active}}">
+                                    <a href="{{pagurl}}" class="flex items-center justify-center w-10 h-10 rounded-xl text-sm font-bold flex-shrink-0 text-decoration-none ats-pagination-btn {{#active}}active{{/active}}">
                                         {{pagnumber}}
                                     </a>
                                 {{/pagination}}
                             </div>
 
                             {{#next_url}}
-                                <a href="{{next_url}}"
-                                   class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-brand hover:text-white hover:border-brand transition-all duration-200 shadow-sm flex-shrink-0 text-decoration-none"
-                                   title="{{#str}} next {{/str}}">
+                                <a href="{{next_url}}" class="flex items-center justify-center w-10 h-10 rounded-xl ats-pagination-btn text-decoration-none" title="{{#str}} next {{/str}}">
                                     <i class="fas fa-chevron-right text-xs"></i>
                                 </a>
                             {{/next_url}}
@@ -304,18 +305,25 @@
                 {{/has_pagination}}
             </div>
         </div>
-
-        <footer class="mt-auto py-8 text-center border-t border-gray-200/50 mt-12">
-            <p class="text-sm text-gray-500 font-medium">
-                {{#str}}copyright_label, local_academic_ticket_system{{/str}} © {{currentyear}} <span class="text-brand font-bold">Boghdady</span>
+        <footer class="ats-footer">
+            <p>
+                {{#str}}copyright_label, local_academic_ticket_system{{/str}} © {{currentyear}}
+                <span class="ats-tooltip-wrapper">
+            <a href="https://boghdady.site" target="_blank" rel="noopener noreferrer">Boghdady</a>
+            <span class="ats-tooltip-text">
+                {{#str}}visit_my_portfolio, local_academic_ticket_system{{/str}}
+            </span>
+        </span>
             </p>
         </footer>
-
     </div>
 </div>
 
 {{#js}}
     require(['local_academic_ticket_system/ticket_filter'], function(ticketFilter) {
     ticketFilter.init();
+    });
+    require(['jquery', 'bootstrap'], function($) {
+    $('[data-bs-toggle="tooltip"]').tooltip();
     });
 {{/js}}

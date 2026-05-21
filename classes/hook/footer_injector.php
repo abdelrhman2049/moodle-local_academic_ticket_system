@@ -33,6 +33,12 @@ namespace local_academic_ticket_system\hook;
  */
 class footer_injector {
 
+    /**
+     * Injects urgent alerts before the footer HTML is generated.
+     *
+     * @param \core\hook\output\before_footer_html_generation $hook The hook instance.
+     * @return void
+     */
     public static function add_urgent_alert(\core\hook\output\before_footer_html_generation $hook): void {
         global $PAGE;
 

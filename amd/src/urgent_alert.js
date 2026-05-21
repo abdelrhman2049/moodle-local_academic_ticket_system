@@ -79,8 +79,12 @@ const renderAlert = (data) => {
     try {
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
         audio.volume = 0.5;
-        audio.play().catch(() => {});
-    } catch (e) {}
+        audio.play().catch(() => {
+            return false;
+        });
+    } catch (e) {
+        // Ignore exception.
+    }
 
     const div = document.createElement('div');
     div.id = 'custom-urgent-toast';
@@ -102,13 +106,13 @@ const renderAlert = (data) => {
         document.body.removeChild(div);
         window.location.href = data.url;
     };
-    
+
     document.body.appendChild(div);
 };
 
 export const init = () => {
     injectStyles();
-    
+
     let lastCheck = Math.floor(Date.now() / 1000) - 3600;
 
     const checkUrgent = () => {
@@ -127,8 +131,11 @@ export const init = () => {
                         renderAlert(data);
                     }
                 }
+                return true;
             })
-            .catch(() => {});
+            .catch(() => {
+                return false;
+            });
     };
 
     checkUrgent();

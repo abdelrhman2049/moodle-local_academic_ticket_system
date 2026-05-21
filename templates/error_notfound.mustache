@@ -16,19 +16,22 @@
 }}
 {{!
     @package    local_academic_ticket_system
-    @copyright  2026 Abdulrahman
+    @copyright  2026 learn-ix support@learn-ix.com
     @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
+{{!
+    @template local_academic_ticket_system/error_notfound
 
+    Example context (json):
+    {
+        "ticketid": "123",
+        "home_url": "#"
+    }
+}}
 <div class="local-academic-ticket-system">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <div class="fixed inset-0 z-[-1] overflow-hidden">
-        <div class="blob-err notfound-blob-e1 rounded-full"></div>
-        <div class="blob-err notfound-blob-e2 rounded-full"></div>
-    </div>
-
+    
     <div class="ats-error-page p-4">
         <div class="glass-error p-10 rounded-3xl text-center max-w-lg w-full transform transition-all hover:scale-[1.01]">
             <div class="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">

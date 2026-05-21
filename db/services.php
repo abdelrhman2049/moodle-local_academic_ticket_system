@@ -22,6 +22,8 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 $functions = [
     'local_academic_ticket_system_update_presence' => [
         'classname'     => 'local_academic_ticket_system\external\update_presence',

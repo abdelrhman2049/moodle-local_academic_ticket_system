@@ -2,7 +2,7 @@ define(['core/ajax'], function(ajax) {
     var renderViewers = function(viewers) {
         var container = document.getElementById('presence-list');
         var wrapper = document.getElementById('presence-container');
-        
+
         if (!container || !wrapper) {
             return;
         }
@@ -10,19 +10,19 @@ define(['core/ajax'], function(ajax) {
         if (viewers.length > 0) {
             wrapper.classList.remove('hidden');
             wrapper.style.display = 'block';
-            container.innerHTML = ''; 
-            
+            container.innerHTML = '';
+
             viewers.forEach(function(viewer) {
                 var div = document.createElement('div');
                 div.className = 'presence-user';
-                
+
                 if (viewer.is_owner) {
                     div.classList.add('is-owner');
                     div.title = viewer.fullname + ' (Student)';
                 } else {
                     div.title = viewer.fullname;
                 }
-                
+
                 div.innerHTML = viewer.avatar;
                 container.appendChild(div);
             });
@@ -41,17 +41,19 @@ define(['core/ajax'], function(ajax) {
                         ticketid: ticketId
                     }
                 };
-                
+
                 ajax.call([request])[0].then(function(response) {
                     if (response.status === 'success') {
                         renderViewers(response.viewers);
                     }
+                    return true;
                 }).catch(function() {
+                    return false;
                 });
             };
 
-            sendPing(); 
-            setInterval(sendPing, 5000); 
+            sendPing();
+            setInterval(sendPing, 5000);
         }
     };
 });

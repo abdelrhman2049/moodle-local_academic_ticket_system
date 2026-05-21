@@ -99,6 +99,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && confirm_sesskey()) {
                 }
             }
         }
+        if (!empty($_FILES['voice_note']) && $_FILES['voice_note']['error'] === UPLOAD_ERR_OK) {
+            $filerecord = [
+                'contextid'    => $context->id,
+                'component'    => 'local_academic_ticket_system',
+                'filearea'     => 'attachment',
+                'itemid'       => $ticketid,
+                'filepath'     => '/',
+                'filename'     => clean_param($_FILES['voice_note']['name'], PARAM_FILE),
+                'userid'       => $USER->id,
+                'timecreated'  => time(),
+                'timemodified' => time(),
+            ];
+
+            try {
+                $fs = get_file_storage();
+                $fs->create_file_from_pathname($filerecord, $_FILES['voice_note']['tmp_name']);
+            } catch (Exception $e) {
+                debugging('Error saving voice note: ' . $e->getMessage());
+            }
+        }
 
         $ticketurl = new moodle_url('/local/academic_ticket_system/view.php', ['id' => $ticketid]);
         $categorytitle = $DB->get_field('local_academic_ticket_system_categories', 'title', ['id' => $categoryid]);

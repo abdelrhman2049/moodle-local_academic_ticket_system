@@ -19,41 +19,88 @@
     @copyright  2026 learn-ix support@learn-ix.com
     @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
+{{!
+    @template local_academic_ticket_system/view
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
+    Example context (json):
+    {
+        "home_url": "#",
+        "sesskey": "12345",
+        "has_manage_capability": true,
+        "ticketid": "1",
+        "ticket": {
+            "id": "1",
+            "title": "Need help with login",
+            "created_by": "John Doe",
+            "creator_profile_url": "#",
+            "category": "IT Support",
+            "created_at": "May 21, 2026",
+            "priority_urgent": false,
+            "priority_high": true,
+            "priority_medium": false,
+            "priority_low": false,
+            "priority_label": "High",
+            "status_class": "bg-green-100 text-green-700",
+            "translated_status": "Open",
+            "description": "<p>I cannot log into the portal since yesterday.</p>",
+            "status_closed": false,
+            "status": "open",
+            "has_attachments": true,
+            "attachments": [
+                {
+                    "download_url": "#",
+                    "icon": "<i class=\"fas fa-file-pdf\"></i>",
+                    "name": "error_log.pdf"
+                }
+            ]
+        },
+        "replies": [
+            {
+                "is_manager_reply": true,
+                "user": "Support Team",
+                "time": "May 21, 2026 - 10:00 AM",
+                "message": "<p>We are checking this issue right now.</p>",
+                "has_reply_attachments": false
+            }
+        ],
+        "can_rate": true,
+        "rating_options": [
+            {"val": "1"}, {"val": "2"}, {"val": "3"}, {"val": "4"}, {"val": "5"}
+        ],
+        "has_feedback": false,
+        "is_assigned": true,
+        "assigned_user_name": "Admin Manager",
+        "categories": [
+            {
+                "id": "1",
+                "title": "IT Support",
+                "is_selected": true
+            }
+        ],
+        "assignable_users": [
+            {
+                "id": "2",
+                "fullname": "Support Agent",
+                "is_selected": false
+            }
+        ],
+        "internal_notes": [],
+        "latest_tickets": [],
+        "has_ticket_log": false
+    }
+}}
 <div class="ats-container relative">
-
-    <!-- كلاسات مساعدة لدمج وتوزيع ألوان الهوية بشكل احترافي مع الـ Hover -->
-    <style>
-        .ats-container .bg-primary-solid { background-color: var(--ats-primary) !important; }
-        .ats-container .bg-secondary-solid { background-color: var(--ats-secondary) !important; }
-
-        .ats-container .text-primary-solid { color: var(--ats-primary) !important; }
-        .ats-container .text-secondary-solid { color: var(--ats-secondary) !important; }
-
-        .ats-container .btn-primary-solid { background-color: var(--ats-primary) !important; color: white !important; transition: all 0.3s ease; border: none; }
-        .ats-container .btn-primary-solid:hover { background-color: var(--ats-secondary) !important; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-
-        .ats-container .btn-secondary-solid { background-color: var(--ats-secondary) !important; color: white !important; transition: all 0.3s ease; border: none; }
-        .ats-container .btn-secondary-solid:hover { background-color: var(--ats-primary) !important; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-
-        .ats-container .hover-text-secondary:hover { color: var(--ats-secondary) !important; }
-        .ats-container .group:hover .group-hover-text-secondary { color: var(--ats-secondary) !important; }
-        .ats-container .hover-border-secondary:hover { border-color: var(--ats-secondary) !important; }
-    </style>
-
-    <div class="fixed inset-0 z-0 bg-gray-100 overflow-hidden">
-        <div class="blob blob-1 rounded-full"></div>
-        <div class="blob blob-2 rounded-full"></div>
-        <div class="blob blob-3 rounded-full"></div>
-        <div class="absolute inset-0 bg-white/60 backdrop-blur-[60px]"></div>
+    <div id="imageModal" class="ats-image-modal" onclick="closeImageModal()">
+        <span class="ats-close-btn" onclick="closeImageModal()">&times;</span>
+        <a id="modalDownload" href="#" download class="ats-download-btn">
+            <i class="fas fa-download"></i>
+        </a>
+        <img id="modalImage" src="" onclick="event.stopPropagation()">
     </div>
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-10 max-w-7xl relative z-10 min-h-screen flex flex-col">
 
-        <header class="glass-panel rounded-3xl p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-500 hover:shadow-2xl">
+        <header class="glass-panel rounded-3xl p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-2xl">
             <div class="flex items-center gap-6 w-full md:w-auto">
                 <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-brand text-white bg-primary-solid">
                     <i class="fas fa-ticket-alt text-3xl"></i>
@@ -97,7 +144,7 @@
                             <div>
                                 <p class="text-xs text-gray-400 font-bold uppercase">{{#str}}user_name_label, local_academic_ticket_system{{/str}}</p>
                                 <p class="text-gray-800 font-bold">
-                                    <a href="{{ticket.creator_profile_url}}" class="text-gray-800 hover:underline hover-text-secondary text-decoration-none transition-colors" title="اضغط هنا لعرض بروفايل الطالب">{{ticket.created_by}}</a>
+                                    <a href="{{ticket.creator_profile_url}}" class="text-gray-800 hover:underline hover-text-secondary text-decoration-none transition-colors" title="{{#str}}view_profile, local_academic_ticket_system{{/str}}">{{ticket.created_by}} <i class="fa-solid fa-arrow-up-right-from-square"></i> </a>
                                 </p>
                             </div>
                         </div>
@@ -116,8 +163,8 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all
-                                {{#ticket.priority_urgent}}bg-red-100 text-red-600 animate-pulse{{/ticket.priority_urgent}}
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center
+                                {{#ticket.priority_urgent}}bg-red-100 text-red-600{{/ticket.priority_urgent}}
                                 {{#ticket.priority_high}}bg-orange-100 text-orange-600{{/ticket.priority_high}}
                                 {{#ticket.priority_medium}}bg-blue-100 text-blue-600{{/ticket.priority_medium}}
                                 {{#ticket.priority_low}}bg-gray-100 text-gray-500{{/ticket.priority_low}}">
@@ -162,15 +209,41 @@
                             </h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {{#ticket.attachments}}
-                                    <a href="{{download_url}}" target="_blank" class="glass-card p-3 rounded-xl flex items-center gap-3 group text-decoration-none hover-border-secondary transition-all">
-                                        <div class="w-10 h-10 bg-brand-light rounded-lg flex items-center justify-center text-primary-solid group-hover:text-secondary-solid group-hover:scale-110 transition-transform">
-                                            {{{icon}}}
+                                    {{#is_image}}
+                                        <div onclick="openImageModal('{{download_url}}')" class="glass-card p-2 rounded-xl flex flex-col items-center justify-center group cursor-pointer hover-border-secondary transition-all overflow-hidden relative min-h-[100px]">
+                                            <div class="absolute inset-0">
+                                                <img src="{{download_url}}" class="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity duration-300" alt="{{name}}">
+                                            </div>
+                                            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
+                                            <i class="fas fa-search-plus text-white text-3xl drop-shadow-md z-10 opacity-0 group-hover:opacity-100 transition-opacity scale-50 group-hover:scale-100 duration-300"></i>
+                                            <div class="absolute bottom-0 inset-x-0 bg-black/70 backdrop-blur-sm p-1 z-10">
+                                                <p class="text-[10px] font-bold text-white truncate text-center">{{name}}</p>
+                                            </div>
                                         </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-bold text-gray-700 truncate group-hover-text-secondary transition-colors">{{name}}</p>
-                                            <p class="text-xs text-gray-400">Click to download</p>
+                                    {{/is_image}}
+
+                                    {{#is_audio}}
+                                        <div class="glass-card p-3 rounded-xl flex flex-col justify-center gap-2 hover-border-secondary transition-all col-span-1 sm:col-span-2 md:col-span-1">
+                                            <p class="text-xs font-bold text-gray-700 truncate" title="{{name}}"><i class="fas fa-microphone text-primary-solid mr-1"></i> {{name}}</p>
+                                            <audio controls class="w-full ats-audio-player">
+                                                <source src="{{download_url}}">
+                                            </audio>
                                         </div>
-                                    </a>
+                                    {{/is_audio}}
+
+                                    {{^is_image}}
+                                        {{^is_audio}}
+                                            <a href="{{download_url}}" target="_blank" class="glass-card p-3 rounded-xl flex items-center gap-3 group text-decoration-none hover-border-secondary transition-all">
+                                                <div class="w-10 h-10 bg-brand-light rounded-lg flex items-center justify-center text-primary-solid group-hover:text-secondary-solid group-hover:scale-110 transition-transform">
+                                                    {{{icon}}}
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-bold text-gray-700 truncate group-hover-text-secondary transition-colors">{{name}}</p>
+                                                    <p class="text-xs text-gray-400">{{#str}}click_to_download, local_academic_ticket_system{{/str}}</p>
+                                                </div>
+                                            </a>
+                                        {{/is_audio}}
+                                    {{/is_image}}
                                 {{/ticket.attachments}}
                             </div>
                         </div>
@@ -191,7 +264,7 @@
                                     </div>
                                     <div>
                                         <p class="text-sm font-bold text-gray-800">{{user}}</p>
-                                        <p class="text-xs text-gray-500">{{#is_manager_reply}}Support Team{{/is_manager_reply}}{{^is_manager_reply}}Student{{/is_manager_reply}}</p>
+                                        <p class="text-xs text-gray-500">{{#is_manager_reply}}{{#str}}support_team, local_academic_ticket_system{{/str}}{{/is_manager_reply}}{{^is_manager_reply}}{{#str}}student, local_academic_ticket_system{{/str}}{{/is_manager_reply}}</p>
                                     </div>
                                 </div>
                                 <div class="text-xs font-medium text-gray-500 bg-white/50 px-2 py-1 rounded-lg">
@@ -204,12 +277,31 @@
 
                             {{#has_reply_attachments}}
                                 <div class="mt-4 pt-3 border-t border-gray-400/20">
-                                    <p class="text-xs font-bold text-gray-500 mb-2">Attached Files:</p>
-                                    <div class="flex flex-wrap gap-2">
+                                    <p class="text-xs font-bold text-gray-500 mb-2">{{#str}}attached_files, local_academic_ticket_system{{/str}}</p>
+                                    <div class="flex flex-wrap gap-2 items-center">
                                         {{#reply_attachments}}
-                                            <a href="{{url}}" class="inline-flex items-center gap-2 px-3 py-1 bg-white/60 rounded-lg text-xs font-bold text-primary-solid hover:bg-brand-light transition-colors text-decoration-none hover-border-secondary hover-text-secondary border border-transparent">
-                                                <i class="fas fa-file"></i> {{name}}
-                                            </a>
+                                            {{#is_image}}
+                                                <div onclick="openImageModal('{{url}}')" class="inline-flex items-center gap-2 px-3 py-1 bg-white/60 rounded-lg text-xs font-bold text-primary-solid hover:bg-brand-light transition-colors cursor-pointer hover-border-secondary hover-text-secondary border border-transparent shadow-sm">
+                                                    <i class="fas fa-image"></i> {{name}} ({{#str}}view, local_academic_ticket_system{{/str}})
+                                                </div>
+                                            {{/is_image}}
+
+                                            {{#is_audio}}
+                                                <div class="w-full sm:w-auto min-w-[200px] bg-white/60 rounded-lg p-2 border border-transparent hover-border-secondary shadow-sm">
+                                                    <p class="text-[10px] font-bold text-gray-600 mb-1 truncate" title="{{name}}"><i class="fas fa-microphone mr-1 text-primary-solid"></i> {{name}}</p>
+                                                    <audio controls class="w-full ats-audio-player">
+                                                        <source src="{{url}}">
+                                                    </audio>
+                                                </div>
+                                            {{/is_audio}}
+
+                                            {{^is_image}}
+                                                {{^is_audio}}
+                                                    <a href="{{url}}" target="_blank" class="inline-flex items-center gap-2 px-3 py-1 bg-white/60 rounded-lg text-xs font-bold text-primary-solid hover:bg-brand-light transition-colors text-decoration-none hover-border-secondary hover-text-secondary border border-transparent shadow-sm">
+                                                        <i class="fas fa-file"></i> {{name}}
+                                                    </a>
+                                                {{/is_audio}}
+                                            {{/is_image}}
                                         {{/reply_attachments}}
                                     </div>
                                 </div>
@@ -229,13 +321,13 @@
                 </div>
 
                 {{#can_rate}}
-                    <div class="glass-panel rounded-3xl p-8 border-t-4 border-brand animate-bounce-slight shadow-xl">
+                    <div class="glass-panel rounded-3xl p-8 border-t-4 border-brand shadow-xl">
                         <div class="flex flex-col items-center text-center">
                             <div class="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center text-secondary-solid mb-4">
                                 <i class="fas fa-star text-2xl"></i>
                             </div>
-                            <h3 class="text-xl font-black text-gray-800 mb-2">How was your experience?</h3>
-                            <p class="text-sm text-gray-500 mb-6 font-medium">Your feedback helps us improve our service.</p>
+                            <h3 class="text-xl font-black text-gray-800 mb-2">{{#str}}experience_question, local_academic_ticket_system{{/str}}</h3>
+                            <p class="text-sm text-gray-500 mb-6 font-medium">{{#str}}feedback_help, local_academic_ticket_system{{/str}}</p>
 
                             <form method="post" action="view.php?id={{ticket.id}}&action=submit_feedback" class="w-full max-w-md">
                             <input type="hidden" name="sesskey" value="{{sesskey}}">
@@ -251,11 +343,10 @@
 
                             <textarea name="feedback_comment"
                                       class="w-full p-4 rounded-2xl border border-gray-200 bg-white/50 focus-ring-brand focus:border-brand outline-none text-sm font-medium mb-4 transition-all"
-                                      placeholder="Any additional comments? (Optional)"></textarea>
+                                      placeholder="{{#str}}feedback_placeholder, local_academic_ticket_system{{/str}}"></textarea>
 
-                            <!-- زر التقييم يأخذ لون Secondary وعند الـ Hover يتحول لـ Primary -->
                             <button type="submit" class="btn-secondary-solid w-full py-4 rounded-2xl text-white font-bold shadow-lg shadow-brand">
-                                <i class="fas fa-paper-plane"></i> Submit Feedback
+                                <i class="fas fa-paper-plane"></i> {{#str}}submit_feedback, local_academic_ticket_system{{/str}}
                             </button>
                             </form>
                         </div>
@@ -269,7 +360,7 @@
                                 <i class="fas fa-check-circle text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-black text-gray-800">Feedback Submitted</h4>
+                                <h4 class="font-black text-gray-800">{{#str}}feedback_submitted, local_academic_ticket_system{{/str}}</h4>
                                 <div class="flex text-amber-500 my-1">
                                     {{#feedback_data.stars}}<i class="fas fa-star text-xs"></i>{{/feedback_data.stars}}
                                 </div>
@@ -287,12 +378,12 @@
                             <i class="fas fa-pen text-primary-solid"></i> {{#str}}add_reply_heading, local_academic_ticket_system{{/str}}
                         </h3>
 
-                        <div id="presence-container" class="hidden mb-6 transition-all duration-500 ease-out">
+                        <div id="presence-container" class="hidden mb-6">
                             {{#show_presence_list}}
                                 <div class="presence-wrapper">
                                     <div class="presence-indicator">
                                         <div class="pulsing-dot"></div>
-                                        <span class="presence-text">Live Viewing</span>
+                                        <span class="presence-text">{{#str}}live_viewing, local_academic_ticket_system{{/str}}</span>
                                     </div>
                                     <div id="presence-list" class="presence-avatars">
                                     </div>
@@ -309,6 +400,32 @@
 
                         <div class="mb-6">
                             <label class="block text-sm font-bold text-gray-600 mb-2 flex items-center gap-2">
+                                <i class="fas fa-microphone text-primary-solid"></i> {{#str}}record_voice_note, local_academic_ticket_system{{/str}}
+                            </label>
+                            <div class="glass-panel rounded-2xl p-4 flex items-center justify-between gap-4 border-dashed border-2 border-brand-light">
+                                <div class="flex items-center gap-3">
+                                    <button type="button" id="startRecord" class="w-12 h-12 rounded-full bg-brand-light text-brand flex items-center justify-center hover:bg-brand hover:text-white transition-all shadow-md hover:shadow-brand">
+                                        <i class="fas fa-microphone" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" id="stopRecord" class="hidden w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30">
+                                        <i class="fas fa-stop" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" id="cancelRecord" class="hidden w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center hover:bg-red-100 hover:text-red-500 transition-all shadow-sm">
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                    <div id="recordingStatus" class="text-sm font-bold text-gray-500">
+                                        {{#str}}click_to_record, local_academic_ticket_system{{/str}}
+                                    </div>
+                                </div>
+                                <div id="audioPreviewContainer" class="hidden flex-1">
+                                    <audio id="audioPlayback" controls class="w-full h-8 outline-none"></audio>
+                                </div>
+                            </div>
+                            <input type="file" id="voice_note_input" name="reply_voice" class="hidden" accept="audio/*">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-gray-600 mb-2 flex items-center gap-2">
                                 <i class="fas fa-paperclip text-secondary-solid"></i> {{#str}}attach_files_optional, local_academic_ticket_system{{/str}}
                             </label>
 
@@ -320,7 +437,7 @@
                                     <p class="text-sm font-bold text-gray-500 group-hover-text-secondary transition-colors" id="file-chosen-text">
                                         {{#str}}click_to_upload, local_academic_ticket_system{{/str}}
                                     </p>
-                                    <p class="text-xs text-gray-400 mt-1">PDF, JPG, PNG (Max 5MB)</p>
+                                    <p class="text-xs text-gray-400 mt-1">{{#str}}allowed_file_types, local_academic_ticket_system{{/str}}</p>
                                 </div>
 
                                 <div id="selected-files-list" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 p-4">
@@ -330,7 +447,6 @@
                             </div>
                         </div>
 
-                        <!-- زر إرسال الرد يأخذ لون Primary وعند الـ Hover يتحول لـ Secondary -->
                         <button type="submit" class="btn-primary-solid w-full sm:w-auto px-8 py-3.5 rounded-2xl text-white font-bold text-lg shadow-lg shadow-brand">
                             <i class="fas fa-paper-plane"></i> {{#str}}send_reply_button, local_academic_ticket_system{{/str}}
                         </button>
@@ -361,9 +477,9 @@
                         {{/is_assigned}}
 
                         {{^is_assigned}}
-                            <div class="absolute top-0 right-0 w-16 h-16 bg-red-500/20 rounded-bl-full -mr-4 -mt-4 animate-pulse"></div>
+                            <div class="absolute top-0 right-0 w-16 h-16 bg-red-500/20 rounded-bl-full -mr-4 -mt-4"></div>
                             <div class="flex items-center gap-4 relative z-10">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-red-200 animate-bounce-slight">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-red-200">
                                     <i class="fas fa-user-clock text-xl"></i>
                                 </div>
                                 <div>
@@ -378,8 +494,10 @@
                         {{/is_assigned}}
                     </div>
 
-                    <div class="glass-panel rounded-3xl p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-20 h-20 bg-brand-light rounded-bl-full -mr-4 -mt-4"></div>
+                    <div class="glass-panel rounded-3xl p-6 relative z-30">
+                        <div class="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none z-0">
+                            <div class="absolute top-0 right-0 w-20 h-20 bg-brand-light rounded-bl-full -mr-4 -mt-4"></div>
+                        </div>
 
                         <h3 class="text-xl font-extrabold text-gray-800 mb-6 flex items-center gap-2 relative z-10">
                             <span class="w-8 h-8 rounded-lg bg-brand-light text-primary-solid flex items-center justify-center"><i class="fas fa-cogs"></i></span>
@@ -394,15 +512,14 @@
                                 <div class="relative">
                                     <select name="status" class="glass-select focus-ring-brand focus:border-brand">
                                         <option value="{{ticket.status}}" selected disabled hidden>{{ticket.translated_status}}</option>
-                                        <option value="open">Open</option>
-                                        <option value="closed">Closed</option>
-                                        <option value="admin reply">Admin Reply</option>
-                                        <option value="student reply">Student Reply</option>
-                                        <option value="in progress">In Progress</option>
-                                        <option value="urgent">Urgent</option>
+                                        <option value="open">{{#str}}status_open, local_academic_ticket_system{{/str}}</option>
+                                        <option value="closed">{{#str}}status_closed, local_academic_ticket_system{{/str}}</option>
+                                        <option value="admin reply">{{#str}}status_adminreply, local_academic_ticket_system{{/str}}</option>
+                                        <option value="student reply">{{#str}}status_studentreply, local_academic_ticket_system{{/str}}</option>
+                                        <option value="in progress">{{#str}}status_in_progress, local_academic_ticket_system{{/str}}</option>
+                                        <option value="urgent">{{#str}}status_urgent, local_academic_ticket_system{{/str}}</option>
                                     </select>
                                 </div>
-                                <!-- زر الأدمين (Primary -> Secondary) -->
                                 <button type="submit" class="btn-primary-solid w-full py-2.5 px-4 rounded-xl text-white font-bold shadow-md shadow-brand text-sm">
                                     <i class="fas fa-save"></i> {{#str}}update_status_button, local_academic_ticket_system{{/str}}
                                 </button>
@@ -418,7 +535,6 @@
                                         <option value="{{id}}" {{#is_selected}}selected{{/is_selected}}>{{title}}</option>
                                     {{/categories}}
                                 </select>
-                                <!-- زر الأدمين (Secondary -> Primary) لتنويع الألوان -->
                                 <button type="submit" class="btn-secondary-solid w-full py-2.5 px-4 rounded-xl text-white font-bold shadow-md shadow-brand text-sm">
                                     <i class="fas fa-exchange-alt"></i> {{#str}}update_category_button, local_academic_ticket_system{{/str}}
                                 </button>
@@ -429,14 +545,38 @@
                                 <label class="text-xs font-bold text-gray-500 uppercase mb-2 block ml-1">{{#str}}assign_user_label,local_academic_ticket_system{{/str}}</label>
                                 <form class="flex flex-col gap-2" method="post" action="view.php?id={{ticket.id}}&action=assign_user">
                                 <input type="hidden" name="sesskey" value="{{sesskey}}">
-                                <select name="assigned_to" class="glass-select focus-ring-brand focus:border-brand">
-                                    <option value="0">{{#str}}unassigned, local_academic_ticket_system{{/str}}</option>
-                                    {{#assignable_users}}
-                                        <option value="{{id}}" {{#is_selected}}selected{{/is_selected}}>{{fullname}}</option>
-                                    {{/assignable_users}}
-                                </select>
-                                <!-- زر الأدمين (Primary -> Secondary) -->
-                                <button type="submit" class="btn-primary-solid w-full py-2.5 px-4 rounded-xl text-white font-bold shadow-md shadow-brand text-sm">
+
+                                <div class="relative group dropdown-container" id="assignee_dropdown_container">
+                                    <input type="hidden" name="assigned_to" id="assigned_to_input" value="{{assigned_user_id}}">
+
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-search text-gray-400 text-sm"></i>
+                                        </div>
+                                        <input type="text" id="assignee_search" autocomplete="off"
+                                               class="glass-select focus-ring-brand focus:border-brand w-full pl-10 pr-4 py-2 text-sm"
+                                               placeholder="{{#str}}search_user_placeholder, local_academic_ticket_system{{/str}}"
+                                               value="{{assigned_user_name}}">
+                                    </div>
+
+                                    <div id="assignee_list" class="hidden absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto custom-scrollbar">
+                                        <div class="assignee-option p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100" data-value="0" data-search="unassigned not assigned">
+                                            <p class="text-sm font-bold text-gray-800">{{#str}}unassigned, local_academic_ticket_system{{/str}}</p>
+                                        </div>
+                                        {{#assignable_users}}
+                                            <div class="assignee-option p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 {{#is_selected}}bg-brand-light{{/is_selected}}"
+                                                 data-value="{{id}}"
+                                                 data-name="{{fullname}}"
+                                                 data-search="{{fullname}} {{email}} {{username}}">
+                                                <p class="text-sm font-bold text-gray-800">{{fullname}}</p>
+                                                <p class="text-xs text-gray-500 mt-1"><i class="fas fa-envelope mr-1"></i> {{email}}</p>
+                                                <p class="text-[10px] text-gray-400 mt-0.5"><i class="fas fa-user mr-1"></i> {{username}}</p>
+                                            </div>
+                                        {{/assignable_users}}
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-primary-solid w-full py-2.5 px-4 rounded-xl text-white font-bold shadow-md shadow-brand text-sm mt-2">
                                     <i class="fas fa-user-plus"></i> {{#str}}assign_user,local_academic_ticket_system{{/str}}
                                 </button>
                                 </form>
@@ -499,7 +639,7 @@
                                 </a>
                             {{/latest_tickets}}
                             {{^latest_tickets}}
-                                <div class="text-center py-4 text-gray-400 text-sm">No recent tickets.</div>
+                                <div class="text-center py-4 text-gray-400 text-sm">{{#str}}no_recent_tickets, local_academic_ticket_system{{/str}}</div>
                             {{/latest_tickets}}
                         </div>
                     </div>
@@ -531,10 +671,208 @@
 
 {{#js}}
     require([
+    'jquery',
+    'core/str',
     'local_academic_ticket_system/view_interactions',
     'local_academic_ticket_system/presence'
-    ], function(viewInteractions, presence) {
+    ], function($, str, viewInteractions, presence) {
     viewInteractions.init();
     presence.initHeartbeat({{ticketid}});
+
+    window.openImageModal = function(src) {
+    var modal = $('#imageModal');
+    var modalImg = $('#modalImage');
+    var modalDownload = $('#modalDownload');
+    modalImg.attr('src', src);
+    modalDownload.attr('href', src);
+    modal.addClass('active');
+    };
+
+    window.closeImageModal = function() {
+    var modal = $('#imageModal');
+    modal.removeClass('active');
+    setTimeout(function() {
+    $('#modalImage').attr('src', '');
+    $('#modalDownload').attr('href', '#');
+    }, 300);
+    };
+
+    var searchInput = $('#assignee_search');
+    var dropdownList = $('#assignee_list');
+    var hiddenInput = $('#assigned_to_input');
+    var options = $('.assignee-option');
+
+    searchInput.on('focus', function() {
+    dropdownList.removeClass('hidden');
+    searchInput.val('');
+    options.show();
+    });
+
+    searchInput.on('keyup', function() {
+    var searchTerm = $(this).val().toLowerCase();
+    options.each(function() {
+    var searchData = $(this).attr('data-search').toLowerCase();
+    if (searchData.indexOf(searchTerm) > -1) {
+    $(this).show();
+    } else {
+    $(this).hide();
+    }
+    });
+    });
+
+    options.on('click', function() {
+    var val = $(this).attr('data-value');
+    var name = $(this).find('p.font-bold').text();
+    hiddenInput.val(val);
+    searchInput.val(name);
+    dropdownList.addClass('hidden');
+    });
+
+    $(document).on('click', function(e) {
+    if (!$(e.target).closest('#assignee_dropdown_container').length) {
+    dropdownList.addClass('hidden');
+    if (searchInput.val() === '') {
+    var selectedOption = options.filter('[data-value="' + hiddenInput.val() + '"]');
+    if (selectedOption.length) {
+    searchInput.val(selectedOption.find('p.font-bold').text());
+    } else if (hiddenInput.val() === '0') {
+    searchInput.val('{{#str}}unassigned, local_academic_ticket_system{{/str}}');
+    }
+    }
+    }
+    });
+
+    window.playAudioModal = function(url, name) {
+    if (typeof window.Swal !== 'undefined') {
+    window.Swal.fire({
+    title: '<div class="text-xl font-extrabold text-gray-800 mb-2">' + name + '</div>',
+    html: '<div class="mt-4 flex justify-center"><audio controls autoplay class="w-full max-w-sm audio-player-custom"><source src="' + url + '" type="audio/webm">{{#str}}browser_no_audio, local_academic_ticket_system{{/str}}</audio></div>',
+    showConfirmButton: true,
+    confirmButtonText: '{{#str}}close, local_academic_ticket_system{{/str}}',
+    customClass: {
+    popup: 'rounded-[2rem] p-6 shadow-2xl border border-gray-100',
+    confirmButton: 'text-white font-bold py-2.5 px-6 rounded-xl border-0 mt-4'
+    },
+    buttonsStyling: false,
+    didOpen: () => {
+    const confirmBtn = window.Swal.getConfirmButton();
+    if (confirmBtn) {
+    confirmBtn.style.backgroundColor = 'var(--ats-primary)';
+    }
+    }
+    }).catch(function() {
+    return false;
+    });
+    } else {
+    window.open(url, '_blank');
+    }
+    };
+
+    let mediaRecorder;
+    let audioChunks = [];
+
+    $('#startRecord').on('click', async function() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    mediaRecorder = new window.MediaRecorder(stream);
+    audioChunks = [];
+
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+
+    mediaRecorder.onstop = () => {
+    const audioBlob = new window.Blob(audioChunks, {type: 'audio/webm'});
+    const audioUrl = window.URL.createObjectURL(audioBlob);
+    $('#audioPlayback').attr('src', audioUrl);
+    $('#audioPreviewContainer').removeClass('hidden');
+
+    let file = new window.File([audioBlob], "voice_note.webm", {type: "audio/webm"});
+    let container = new window.DataTransfer();
+    container.items.add(file);
+    document.getElementById('voice_note_input').files = container.files;
+
+    $('#recordingStatus').text('{{#str}}ready, local_academic_ticket_system{{/str}}').removeClass('text-red-500').addClass('text-green-600');
+    $('#startRecord').removeClass('hidden');
+    $('#stopRecord').addClass('hidden');
+    $('#cancelRecord').removeClass('hidden');
+    };
+
+    mediaRecorder.start();
+    $(this).addClass('hidden');
+    $('#stopRecord').removeClass('hidden');
+    $('#cancelRecord').addClass('hidden');
+    $('#audioPreviewContainer').addClass('hidden');
+    $('#recordingStatus').text('{{#str}}recording_now, local_academic_ticket_system{{/str}}').removeClass('text-green-600 text-gray-500').addClass('text-red-500');
+    } catch (err) {
+    window.alert('{{#str}}mic_access_denied, local_academic_ticket_system{{/str}}');
+    }
+    }
+    });
+
+    $('#stopRecord').on('click', function() {
+    if (mediaRecorder) {
+    mediaRecorder.stop();
+    }
+    });
+
+    $('#cancelRecord').on('click', function() {
+    document.getElementById('voice_note_input').value = "";
+    $('#audioPreviewContainer').addClass('hidden');
+    $('#audioPlayback').attr('src', '');
+    $(this).addClass('hidden');
+    $('#startRecord').removeClass('hidden');
+    $('#recordingStatus').text('{{#str}}click_to_record, local_academic_ticket_system{{/str}}').removeClass('text-green-600 text-red-500').addClass('text-gray-500');
+    });
+
+    var fileInput = document.getElementById('reply_file_input');
+    var fileList = document.getElementById('selected-files-list');
+    var uploadPlaceholder = document.getElementById('upload-placeholder');
+    var dataTransfer = new window.DataTransfer();
+
+    $(fileInput).on('change', function(e) {
+    var files = e.target.files;
+    for (var i = 0; i < files.length; i++) {
+    dataTransfer.items.add(files[i]);
+    }
+    updateFileList();
+    });
+
+    function updateFileList() {
+    fileInput.files = dataTransfer.files;
+    $(fileList).empty();
+
+    if (dataTransfer.files.length > 0) {
+    $(uploadPlaceholder).addClass('hidden');
+    $(fileList).removeClass('hidden');
+
+    $.each(dataTransfer.files, function(index, file) {
+    var size = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+    var html = '<div class="flex items-center justify-between bg-white/80 p-2 rounded-lg border border-gray-200 shadow-sm">' +
+        '<div class="flex items-center gap-2 overflow-hidden">' +
+            '<i class="fas fa-file text-primary-solid"></i>' +
+            '<div class="min-w-0"><p class="text-xs font-bold text-gray-700 truncate">' + file.name + '</p>' +
+                '<p class="text-[10px] text-gray-500">' + size + '</p></div></div>' +
+        '<button type="button" title="{{#str}}remove_file, local_academic_ticket_system{{/str}}" class="remove-file-btn w-6 h-6 z-10 relative rounded-full bg-red-100 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors cursor-pointer" data-index="' + index + '">' +
+            '<i class="fas fa-times text-xs pointer-events-none"></i></button></div>';
+    $(fileList).append(html);
+    });
+
+    $('.remove-file-btn').on('click', function(e) {
+    e.preventDefault();
+    var idx = parseInt($(this).attr('data-index'));
+    var newDt = new window.DataTransfer();
+    for (var i = 0; i < dataTransfer.files.length; i++) {
+    if (i !== idx) {
+    newDt.items.add(dataTransfer.files[i]);
+    }
+    }
+    dataTransfer = newDt;
+    updateFileList();
+    });
+    } else {
+    $(uploadPlaceholder).removeClass('hidden');
+    $(fileList).addClass('hidden');
+    }
+    }
     });
 {{/js}}

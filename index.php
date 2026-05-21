@@ -24,48 +24,38 @@
 
 require_once('../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
-
 defined('MOODLE_INTERNAL') || die();
-
 global $DB, $USER, $PAGE, $OUTPUT;
-
 require_login();
-
 $context = context_system::instance();
 $PAGE->set_context($context);
 $url = new moodle_url('/local/academic_ticket_system/index.php');
 $PAGE->set_url($url);
 $PAGE->set_title(get_string('pluginname', 'local_academic_ticket_system'));
 $PAGE->set_heading(get_string('pluginname', 'local_academic_ticket_system'));
-
 $PAGE->requires->css(new moodle_url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'));
 $PAGE->requires->css(new moodle_url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'));
 $PAGE->requires->css(new moodle_url('/local/academic_ticket_system/styles/style.css'));
-
 $primary = get_config('local_academic_ticket_system', 'primary_color') ?: '#2563eb';
 $secondary = get_config('local_academic_ticket_system', 'secondary_color') ?: '#4f46e5';
-
 $customcss = "
     :root {
         --ats-primary: {$primary};
         --ats-secondary: {$secondary};
-        --ats-primary-light: {$primary}33; /* 20% opacity */
+        --ats-primary-light: {$primary}33;
     }
 ";
-
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = 3;
 $offset = $page * $perpage;
-
-$canmanage = has_capability('local/academic_ticket_system:manageticket', $context);
+$is_manager = has_capability('local/academic_ticket_system:manageticket', $context);
+$is_specialist = has_capability('local/academic_ticket_system:specialist', $context);
+$canmanage = $is_manager || $is_specialist;
 $canaddticket = has_capability('local/academic_ticket_system:addticket', $context);
 $canaddcategory = has_capability('local/academic_ticket_system:addcategory', $context);
-
-$userselects = "u.firstname, u.lastname";
-
+$userselects = "u.firstname, u.lastname, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename";
 if ($canmanage) {
     $totalcount = $DB->count_records('local_academic_ticket_system_tickets');
-
     $sql = "SELECT t.*, c.title AS category_title, $userselects
             FROM {local_academic_ticket_system_tickets} t
             LEFT JOIN {local_academic_ticket_system_categories} c ON t.category_id = c.id
@@ -73,37 +63,35 @@ if ($canmanage) {
             ORDER BY t.created_at DESC";
     $tickets = $DB->get_records_sql($sql, [], $offset, $perpage);
 } else {
-    $totalcount = $DB->count_records('local_academic_ticket_system_tickets', ['userid' => $USER->id]);
-
+    $totalcount = $DB->count_records_select('local_academic_ticket_system_tickets', 'userid = ? OR assigned_to = ?', [$USER->id, $USER->id]);
     $sql = "SELECT t.*, c.title AS category_title, $userselects
             FROM {local_academic_ticket_system_tickets} t
             LEFT JOIN {local_academic_ticket_system_categories} c ON t.category_id = c.id
             LEFT JOIN {user} u ON t.userid = u.id
-            WHERE t.userid = ?
+            WHERE t.userid = ? OR t.assigned_to = ?
             ORDER BY t.created_at DESC";
-    $tickets = $DB->get_records_sql($sql, [$USER->id], $offset, $perpage);
+    $tickets = $DB->get_records_sql($sql, [$USER->id, $USER->id], $offset, $perpage);
 }
-
+$has_my_assignment = false;
 $assignedusersids = [];
 foreach ($tickets as $ticket) {
     if (!empty($ticket->assigned_to)) {
         $assignedusersids[$ticket->assigned_to] = $ticket->assigned_to;
     }
+    if ($ticket->assigned_to == $USER->id) {
+        $has_my_assignment = true;
+    }
 }
-
 $assignedusers = [];
 if (!empty($assignedusersids)) {
     list($inorsql, $inparams) = $DB->get_in_or_equal($assignedusersids);
-    $assignedusers = $DB->get_records_select('user', "id $inorsql", $inparams, '', 'id, firstname, lastname');
+    $assignedusers = $DB->get_records_select('user', "id $inorsql", $inparams, '', 'id, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename');
 }
-
 $totalclosedglobal = $DB->count_records('local_academic_ticket_system_tickets', ['status' => 'closed']);
 $totalopenglobal = $DB->count_records_select('local_academic_ticket_system_tickets', "status != 'closed'");
-
 $ticketsdata = [];
 foreach ($tickets as $ticket) {
     $isactionneeded = false;
-
     $statusclass = 'bg-gray-100 text-gray-800';
     switch ($ticket->status) {
         case 'open':
@@ -117,7 +105,7 @@ foreach ($tickets as $ticket) {
             break;
         case 'student reply':
             $statusclass = 'bg-yellow-100 text-yellow-800 border-yellow-200';
-            if ($canmanage) {
+            if ($canmanage || $ticket->assigned_to == $USER->id) {
                 $isactionneeded = true;
             }
             break;
@@ -125,43 +113,29 @@ foreach ($tickets as $ticket) {
             $statusclass = 'bg-indigo-100 text-indigo-800 border-indigo-200';
             break;
     }
-
-    $ticket->firstnamephonetic = $ticket->firstnamephonetic ?? '';
-    $ticket->lastnamephonetic  = $ticket->lastnamephonetic ?? '';
-    $ticket->middlename        = $ticket->middlename ?? '';
-    $ticket->alternatename     = $ticket->alternatename ?? '';
-
     $creatorname = fullname($ticket);
-
     $assignedname = '-';
     if (!empty($ticket->assigned_to) && isset($assignedusers[$ticket->assigned_to])) {
-        $assigneduser = clone $assignedusers[$ticket->assigned_to];
-        $assigneduser->firstnamephonetic = '';
-        $assigneduser->lastnamephonetic  = '';
-        $assigneduser->middlename        = '';
-        $assigneduser->alternatename     = '';
-        $assignedname = fullname($assigneduser);
+        $assignedname = fullname($assignedusers[$ticket->assigned_to]);
     }
-
     $ticketsdata[] = [
         'id'               => $ticket->id,
         'title'            => $ticket->title,
         'priority'         => $ticket->priority,
         'status'           => get_string('status_' . str_replace(' ', '_', $ticket->status), 'local_academic_ticket_system'),
         'status_class'     => $statusclass,
-        'category_title'   => $ticket->category_title ?: 'General',
+        'category_title'   => $ticket->category_title ?: get_string('general', 'local_academic_ticket_system'),
         'created_at'       => userdate($ticket->created_at),
         'created_by'       => $creatorname,
         'assigned_to'      => $assignedname,
         'view_url'         => (new moodle_url('/local/academic_ticket_system/view.php', ['id' => $ticket->id]))->out(false),
         'is_action_needed' => $isactionneeded,
+        'is_assigned_to_me' => ($ticket->assigned_to == $USER->id)
     ];
 }
-
 $categoriesdata = [];
 if ($canmanage) {
     $categories = $DB->get_records('local_academic_ticket_system_categories');
-
     $catstats = [];
     if (!empty($categories)) {
         $sqlstats = "SELECT category_id, 
@@ -175,11 +149,9 @@ if ($canmanage) {
             $catstats[$stat->category_id] = $stat;
         }
     }
-
     foreach ($categories as $cat) {
         $catopen = isset($catstats[$cat->id]) ? $catstats[$cat->id]->open_count : 0;
         $catclosed = isset($catstats[$cat->id]) ? $catstats[$cat->id]->closed_count : 0;
-
         $categoriesdata[] = [
             'title'          => $cat->title,
             'open_tickets'   => $catopen,
@@ -187,10 +159,8 @@ if ($canmanage) {
         ];
     }
 }
-
 $paginationdata = [];
 $totalpages = ceil($totalcount / $perpage);
-
 if ($totalpages > 1) {
     for ($i = 0; $i < $totalpages; $i++) {
         $paginationdata[] = [
@@ -200,7 +170,6 @@ if ($totalpages > 1) {
         ];
     }
 }
-
 $templatedata = [
     'user_name'             => fullname($USER),
     'currentyear'           => date('Y'),
@@ -219,8 +188,8 @@ $templatedata = [
     'showing_from'          => $totalcount > 0 ? $offset + 1 : 0,
     'showing_to'            => min($offset + $perpage, $totalcount),
     'total_records'         => $totalcount,
+    'show_assignment_column' => ($canmanage || $has_my_assignment),
 ];
-
 echo $OUTPUT->header();
 echo html_writer::tag('style', $customcss);
 echo $OUTPUT->render_from_template('local_academic_ticket_system/index', $templatedata);
