@@ -816,11 +816,9 @@
     title: 'Oops...',
     text: locString
     });
-    } else {
-    console.error(locString);
     }
     }).fail(function() {
-    console.error('Mic access denied.');
+    // Handle failure silently
     });
     }
     }
@@ -869,9 +867,12 @@
         html += '<div class="flex items-center gap-2 overflow-hidden"><i class="fas fa-file text-primary-solid"></i>';
             html += '<div class="min-w-0"><p class="text-xs font-bold text-gray-700 truncate">' + file.name + '</p>';
                 html += '<p class="text-[10px] text-gray-500">' + size + '</p></div></div>';
+
+        var btnClass = 'remove-file-btn w-6 h-6 z-10 relative rounded-full bg-red-100 text-red-500 ';
+        btnClass += 'flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors cursor-pointer';
+
         html += '<button type="button" title="{{#str}}remove_file, local_academic_ticket_system{{/str}}" ';
-        html += 'class="remove-file-btn w-6 h-6 z-10 relative rounded-full bg-red-100 text-red-500 flex items-center justify-center ';
-        html += 'hover:bg-red-500 hover:text-white transition-colors cursor-pointer" data-index="' + index + '">';
+        html += 'class="' + btnClass + '" data-index="' + index + '">';
         html += '<i class="fas fa-times text-xs pointer-events-none"></i></button></div>';
     $(fileList).append(html);
     });
