@@ -34,13 +34,11 @@ function xmldb_local_academic_ticket_system_upgrade($oldversion) {
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2026051604) {
-
         $shortname   = 'specialist';
         $name        = get_string('rolespecialist', 'local_academic_ticket_system');
         $description = get_string('rolespecialistdescription', 'local_academic_ticket_system');
 
         if (!$DB->record_exists('role', ['shortname' => $shortname])) {
-
             $roleid = create_role($name, $shortname, $description, '');
 
             if ($roleid) {
@@ -49,9 +47,7 @@ function xmldb_local_academic_ticket_system_upgrade($oldversion) {
                 $systemcontext = context_system::instance();
 
                 assign_capability('local/academic_ticket_system:manageticket', CAP_ALLOW, $roleid, $systemcontext->id, true);
-
                 assign_capability('local/academic_ticket_system:download', CAP_ALLOW, $roleid, $systemcontext->id, true);
-
                 assign_capability('local/academic_ticket_system:viewticket', CAP_ALLOW, $roleid, $systemcontext->id, true);
             }
         }
