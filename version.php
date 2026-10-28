@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_academic_ticket_system';
-$plugin->version = 2026102901;
+$plugin->version = 2026102902;
 $plugin->requires = 2022041900;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '3.2.2';
+$plugin->release = '3.2.3';

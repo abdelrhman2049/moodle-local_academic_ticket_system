@@ -133,7 +133,7 @@
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;
-  border-color: #e5e7eb;
+  border-color: var(--bs-border-color, #e5e7eb);
 }
 
 .ats-container ::before,
@@ -161,7 +161,7 @@
 
 .ats-container abbr:where([title]) {
   -webkit-text-decoration: underline dotted;
-          text-decoration: underline dotted;
+  text-decoration: underline dotted;
 }
 
 .ats-container h1,
@@ -324,13 +324,13 @@
 
 .ats-container input::-moz-placeholder, .ats-container textarea::-moz-placeholder {
   opacity: 1;
-  color: #9ca3af;
+  color: var(--bs-tertiary-color, #9ca3af);
 }
 
 .ats-container input::placeholder,
 .ats-container textarea::placeholder {
   opacity: 1;
-  color: #9ca3af;
+  color: var(--bs-tertiary-color, #9ca3af);
 }
 
 .ats-container button,
@@ -368,35 +368,39 @@
   padding: 15px;
   margin-bottom: 20px;
   border-left: 5px solid #017BFE;
-  background-color: #E8F4FD;
-  color: #004085;
+  background-color: var(--bs-info-bg-subtle, #E8F4FD);
+  color: var(--bs-info-text-emphasis, #004085);
   border-radius: 5px;
   font-family: Arial, sans-serif;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .ats-container .custom-alert.alert-info {
-  border-color: #007BFF;
-  background-color: #E9F7FF;
-  color: #004085;
+  border-color: var(--bs-info, #007BFF);
+  background-color: var(--bs-info-bg-subtle, #E9F7FF);
+  color: var(--bs-info-text-emphasis, #004085);
 }
 
 .ats-container .custom-alert.alert-success {
-  border-color: #28A745;
-  background-color: #E9F9ED;
-  color: #155724;
+  border-color: var(--bs-success, #28A745);
+  background-color: var(--bs-success-bg-subtle, #E9F9ED);
+  color: var(--bs-success-text-emphasis, #155724);
 }
 
 .ats-container .custom-alert.alert-warning {
-  border-color: #FFC107;
-  background-color: #FFFAEB;
-  color: #856404;
+  border-color: var(--bs-warning, #FFC107);
+  background-color: var(--bs-warning-bg-subtle, #FFFAEB);
+  color: var(--bs-warning-text-emphasis, #856404);
 }
 
 .ats-container .custom-alert.alert-error {
-  border-color: #DC3545;
-  background-color: #FDEDEC;
-  color: #721C24;
+  border-color: var(--bs-danger, #DC3545);
+  background-color: var(--bs-danger-bg-subtle, #FDEDEC);
+  color: var(--bs-danger-text-emphasis, #721C24);
+}
+
+[data-bs-theme="dark"] .ats-container .custom-alert {
+  box-shadow: none;
 }
 
 .ats-container .alert-title {
@@ -434,7 +438,7 @@
   margin: 0;
   width: 3rem;
   height: 3rem;
-  background: #5059e4;
+  background: var(--bs-primary, #5059e4);
   border-radius: 1.625rem;
 }
 
@@ -444,7 +448,7 @@
   top: 0;
   bottom: 0;
   margin: auto;
-  background: #fff;
+  background: var(--bs-body-bg, #fff);
 }
 
 .ats-container button.learn-more .circle .icon.arrow {
@@ -462,8 +466,8 @@
   right: 0.0625rem;
   width: 0.625rem;
   height: 0.625rem;
-  border-top: 0.125rem solid #fff;
-  border-right: 0.125rem solid #fff;
+  border-top: 0.125rem solid var(--bs-body-bg, #fff);
+  border-right: 0.125rem solid var(--bs-body-bg, #fff);
   transform: rotate(45deg);
 }
 
@@ -476,7 +480,7 @@
   bottom: 0;
   padding: 0.75rem 0;
   margin: 0 0 0 1.85rem;
-  color: #282936;
+  color: var(--bs-body-color, #282936);
   font-weight: 700;
   line-height: 1.6;
   text-align: center;
@@ -488,20 +492,20 @@
 }
 
 .ats-container button:hover .circle .icon.arrow {
-  background: #fff;
+  background: var(--bs-body-bg, #fff);
   transform: translate(1rem, 0);
 }
 
 .ats-container button:hover .button-text {
-  color: #fff;
+  color: var(--bs-primary-color, #fff);
 }
 
 .ats-container .alert {
   position: relative;
   padding: 10px;
-  background-color: #fef3c7;
-  color: #9c8d38;
-  border: 1px solid #fbbf24;
+  background-color: var(--bs-warning-bg-subtle, #fef3c7);
+  color: var(--bs-warning-text-emphasis, #9c8d38);
+  border: 1px solid var(--bs-warning, #fbbf24);
   border-radius: 8px;
   font-size: 14px;
   display: flex;
@@ -518,10 +522,12 @@
   border: none;
   cursor: pointer;
   font-size: 16px;
+  color: inherit;
 }
 
 .ats-container .alert button:hover {
-  color: #d97706;
+  color: var(--bs-warning-text-emphasis, #d97706);
+  opacity: 0.8;
 }
 
 .ats-container .moodle-form-container .fitem {
@@ -529,7 +535,8 @@
 }
 
 .ats-container .moodle-form-container .fitem .fitemtitle {
-  @apply font-semibold text-gray-700 mb-2 w-full text-right !important;
+  @apply font-semibold mb-2 w-full text-right !important;
+  color: var(--bs-body-color, #374151) !important;
 }
 
 .ats-container .moodle-form-container .felement {
@@ -537,5 +544,6 @@
 }
 
 .ats-container .moodle-form-container .text-danger {
-  @apply text-red-500 ml-1 !important;
+  @apply ml-1 !important;
+  color: var(--bs-danger, #ef4444) !important;
 }
